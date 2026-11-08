@@ -1,0 +1,4 @@
+qa/
+*.tar.gz
+*.zip
+.openai/*.local.json
