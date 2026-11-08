@@ -91,64 +91,6 @@
  updateScroll();
 })();
 
-// Paint inspection: one photograph, an authored simulation of defects and a movable light.
-(() => {
- 'use strict';
- const stage = document.querySelector('#inspection-stage');
- const canvas = document.querySelector('#paint-canvas');
- const ctx = canvas.getContext('2d');
- if (!ctx) return;
- const range = document.querySelector('#beam');
- const reduced = matchMedia('(prefers-reduced-motion: reduce)');
- const buttons = [...document.querySelectorAll('[data-finish]')];
- let width = 1, height = 1, light = .52, targetLight = .52;
- let roughness = 1, targetRoughness = 1, frame = 0;
- let seed = 27;
- const random = () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
- const scratches = Array.from({length: 380}, () => ({x:random(), y:.13+random()*.78, radius:.015+random()*.16, start:random()*Math.PI*2, length:.16+random()*.95, strength:.25+random()*.7}));
- function draw() {
-  light += (targetLight-light) * (reduced.matches ? 1 : .18);
-  roughness += (targetRoughness-roughness) * (reduced.matches ? 1 : .12);
-  ctx.clearRect(0,0,width,height);
-  const x = light*width, y = height*.49, radius = Math.max(width*.24,height*.55);
-  // The radial falloff belongs to the inspection lamp, inside the photograph only.
-  const lamp = ctx.createRadialGradient(x,y,0,x,y,radius);
-  lamp.addColorStop(0,'rgba(235,243,226,.16)'); lamp.addColorStop(.25,'rgba(222,234,218,.065)'); lamp.addColorStop(1,'rgba(222,234,218,0)');
-  ctx.fillStyle=lamp;ctx.fillRect(0,0,width,height);
-  if(roughness>.005) {
-   const haze=ctx.createRadialGradient(x,y,0,x,y,radius*.9);
-   haze.addColorStop(0,`rgba(199,211,200,${.16*roughness})`);haze.addColorStop(1,'rgba(199,211,200,0)');ctx.fillStyle=haze;ctx.fillRect(0,0,width,height);
-   scratches.forEach(s => {
-    const sx=s.x*width,sy=s.y*height;
-    const distance=Math.hypot((sx-x)*.8,sy-y);
-    const exposure=Math.max(0,1-distance/radius);
-    if(exposure<.06)return;
-    ctx.strokeStyle=`rgba(225,234,224,${exposure*exposure*s.strength*roughness*.7})`;
-    ctx.lineWidth=.65;ctx.beginPath();ctx.arc(sx,sy,s.radius*Math.min(width,height),s.start,s.start+s.length);ctx.stroke();
-   });
-  }
-  stage.style.setProperty('--beam',(light*100)+'%');
-  if(Math.abs(light-targetLight)>.0005||Math.abs(roughness-targetRoughness)>.002) frame=requestAnimationFrame(draw);
-  else frame=0;
- }
- function requestDraw(){if(!frame)frame=requestAnimationFrame(draw);}
- function resize(){const rect=stage.getBoundingClientRect();width=rect.width;height=rect.height;const dpr=Math.min(devicePixelRatio||1,2);canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);requestDraw();}
- function move(value){targetLight=Math.max(0,Math.min(1,value));range.value=String(Math.round(targetLight*100));requestDraw();}
- stage.addEventListener('pointermove',event=>{if(event.pointerType==='touch')return;const rect=stage.getBoundingClientRect();move((event.clientX-rect.left)/rect.width);},{passive:true});
- stage.addEventListener('pointerdown',event=>{const rect=stage.getBoundingClientRect();move((event.clientX-rect.left)/rect.width);},{passive:true});
- range.addEventListener('input',()=>move(Number(range.value)/100));
- buttons.forEach(button=>button.addEventListener('click',()=>{
-  const after=button.dataset.finish==='after';targetRoughness=after?0:1;
-  buttons.forEach(b=>{const selected=b===button;b.classList.toggle('active',selected);b.setAttribute('aria-pressed',String(selected));});
-  document.querySelector('#surface-state').textContent=after?'После коррекции':'До коррекции';
-  document.querySelector('#inspection-caption').textContent=after?'Чёткое отражение. Свет больше не рассеивается в дефектах.':'То, что не видно при обычном освещении.';
-  stage.dataset.finish=after?'after':'before';requestDraw();
- }));
- new ResizeObserver(resize).observe(stage);
- reduced.addEventListener('change',requestDraw);
- resize();
-})();
-
 // Light moves through the manifesto and the process as the visitor reads.
 (() => {
  const reduced=matchMedia('(prefers-reduced-motion: reduce)');

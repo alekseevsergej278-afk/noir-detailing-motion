@@ -361,9 +361,12 @@ h3 {
   justify-content:space-between;
   align-items:center;
   gap:30px;
-  border-bottom:1px solid #6f796d;
+  border:1px solid #6f796d;
+  border-radius:999px;
+  min-height:52px;
+  max-width:100%;
   font-size:12px;
-  padding:12px 0;
+  padding:13px 22px;
   margin-top:16px;
   color:var(--ink)
 }
@@ -538,28 +541,6 @@ input[type=range]::-moz-range-thumb {
   color:var(--muted);
   font-size:11px;
   text-align:right
-}
-.inspection-comment {
-  display:flex;
-  align-items:center;
-  gap:30px;
-  margin-top:35px
-}
-.thin-line {
-  width:60px;
-  height:1px;
-  background:var(--signal)
-}
-.inspection-comment p {
-  color:var(--muted);
-  font-size:13px
-}
-.inspection-comment strong {
-  color:var(--ink);
-  font-weight:500
-}
-.inspection-comment a {
-  margin:0 0 0 auto
 }
 .services {
   padding-top:40px;
@@ -1334,23 +1315,6 @@ input[type=range]::-moz-range-thumb {
   .demo-note {
     font-size:11px
   }
-  .inspection-comment {
-    gap:18px;
-    align-items:flex-start;
-    flex-wrap:wrap;
-    margin-top:28px
-  }
-  .thin-line {
-    width:26px;
-    margin-top:10px
-  }
-  .inspection-comment p {
-    font-size:12px
-  }
-  .inspection-comment a {
-    margin-left:44px;
-    font-size:11px
-  }
   .services {
     padding-top:20px;
     padding-bottom:80px
@@ -1646,3 +1610,68 @@ input[type=range]::-moz-range-thumb {
     letter-spacing:.05em
   }
 }
+
+/* Rounded action controls, requested by the owner. */
+.button { border-radius:999px; }
+.text-link { transition:background .3s,color .3s,border-color .3s,transform .45s var(--ease); }
+.text-link:hover { background:var(--signal); color:var(--bg); border-color:var(--signal); transform:translateY(-2px); }
+.inspection-action { display:flex; justify-content:flex-end; margin-top:28px; }
+.inspection-action .text-link { margin-top:0; }
+.header-contact { border:1px solid #6f796d; border-radius:999px; padding:12px 18px; }
+.service-content footer { flex-wrap:wrap; }
+.service-content a { border:1px solid #6f796d; border-radius:999px; padding:10px 16px; min-height:42px; text-decoration:none; transition:background .3s,color .3s; }
+.service-content a:hover { background:var(--signal); color:var(--bg); }
+.state-switch { border-radius:999px; overflow:hidden; }
+.state-switch button { border-radius:999px; }
+/* Text: masked stagger rather than a repeated whole-block slide. */
+.type-ready .word-mask,.type-ready .word-mask>span{color:inherit}
+.word-mask{display:inline-block;overflow:clip;vertical-align:top;padding-bottom:.1em;margin-bottom:-.1em}
+.word-mask>span{display:block;transform:translateY(115%);opacity:.2;transition:transform .95s var(--ease),opacity .6s;transition-delay:var(--word-delay,0ms)}
+.type-in .word-mask>span{transform:translateY(0);opacity:1}
+/* Oval buttons: a controlled label roll, directional fill and a small magnetic response. */
+.motion-button{position:relative;isolation:isolate;overflow:hidden;transform:translate(var(--magnet-x,0px),var(--magnet-y,0px));transition:transform .45s var(--ease),color .3s,border-color .3s}
+.motion-button:before{content:'';position:absolute;inset:0;z-index:-1;background:var(--signal);transform:translateY(105%);transition:transform .5s var(--ease);border-radius:inherit}
+.motion-button.primary:before{background:var(--ink)}
+.motion-button:hover:before,.motion-button:focus-visible:before{transform:translateY(0)}
+.motion-button:hover{transform:translate(var(--magnet-x,0px),var(--magnet-y,-2px))}
+.motion-button.primary:hover{background:var(--signal)}
+.motion-button.secondary:hover,.motion-button.text-link:hover,.motion-button.header-contact:hover,.service-content a.motion-button:hover{background:transparent;color:var(--bg);border-color:var(--signal)}
+.button-label{display:block;position:relative;overflow:hidden;line-height:1.5;min-width:0}
+.label-front,.label-back{display:block;transition:transform .55s var(--ease);white-space:nowrap}
+.label-back{position:absolute;inset:0;transform:translateY(110%)}
+.motion-button:hover .label-front,.motion-button:focus-visible .label-front{transform:translateY(-110%)}
+.motion-button:hover .label-back,.motion-button:focus-visible .label-back{transform:translateY(0)}
+.motion-button:active{transform:scale(.97)}
+.desktop-nav a{position:relative;padding:6px 0}
+.desktop-nav a:after{content:'';position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--signal);transform:scaleX(0);transform-origin:right;transition:transform .45s var(--ease)}
+.desktop-nav a:hover:after,.desktop-nav a:focus-visible:after{transform:scaleX(1);transform-origin:left}
+.work-image>span>span{transition:transform .6s var(--ease)}
+.work-image:hover>span>span{transform:translateX(7px)}
+/* Inspection: a two-dimensional lamp and an accessible, large round slider handle. */
+.inspection-stage{cursor:grab;touch-action:pan-y;--beam-y:50%}
+.inspection-stage.is-dragging{cursor:grabbing}
+.beam-guide{position:absolute;top:80px;bottom:75px;left:var(--beam);width:1px;background:#edf6df25;pointer-events:none}
+.beam-marker{top:var(--beam-y);bottom:auto;left:var(--beam);width:58px;height:58px;display:grid;place-items:center;transform:translate(-50%,-50%);border:1px solid #e6efd680;border-radius:50%;background:#101211b0;pointer-events:none;transition:width .3s,height .3s,border-color .3s}
+.beam-marker>svg{width:24px;height:24px;stroke:var(--signal)}
+.inspection-stage:hover .beam-marker,.inspection-stage.is-dragging .beam-marker{width:66px;height:66px;border-color:var(--signal)}
+.beam-control{gap:0;min-width:0}
+.beam-slider-head{display:flex;justify-content:space-between;align-items:center;gap:16px;color:var(--ink);font-size:12px}
+#beam-value{font-variant-numeric:tabular-nums;font-size:11px;color:var(--signal);min-width:40px;text-align:right}
+.beam-rail{position:relative;display:block;width:100%;--position:52%;margin-top:8px}
+.beam-rail:before,.beam-rail:after{content:'';position:absolute;left:0;top:calc(50% - 1px);height:2px;pointer-events:none}
+.beam-rail:before{right:0;background:#68725f}
+.beam-rail:after{width:var(--position);max-width:100%;background:var(--signal)}
+#beam{position:relative;z-index:1;display:block;width:100%;height:44px;margin:0;background:none;cursor:grab;appearance:none}
+#beam:active{cursor:grabbing}
+#beam::-webkit-slider-runnable-track{height:44px;background:transparent;border:0}
+#beam::-webkit-slider-thumb{appearance:none;width:40px;height:40px;margin-top:2px;border:1px solid var(--signal);border-radius:50%;outline:0;background-color:var(--bg);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23dfed9b' stroke-width='1.4'%3E%3Cpath d='m9 8-4 4 4 4m6-8 4 4-4 4'/%3E%3C/svg%3E");background-size:24px;background-position:center;background-repeat:no-repeat;transition:background-color .25s,scale .25s}
+#beam:hover::-webkit-slider-thumb{background-color:#2a3124;scale:1.08}
+#beam::-moz-range-track{height:2px;background:transparent}
+#beam::-moz-range-thumb{width:38px;height:38px;border:1px solid var(--signal);border-radius:50%;outline:0;background:var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23dfed9b' stroke-width='1.4'%3E%3Cpath d='m9 8-4 4 4 4m6-8 4 4-4 4'/%3E%3C/svg%3E") center/24px no-repeat}
+.beam-endpoints{display:flex;justify-content:space-between;gap:15px;color:var(--muted);font-size:11px;margin-top:1px}
+.inspection-controls{align-items:center;padding:26px 0}
+@media(max-width:767px){.beam-marker{width:48px;height:48px}.inspection-stage:hover .beam-marker{width:52px;height:52px}.beam-control{gap:0}.motion-button{--magnet-x:0px;--magnet-y:0px}.beam-slider-head{font-size:12px}}
+@media(prefers-reduced-motion:reduce){.word-mask>span{transform:none!important;opacity:1!important}.motion-button,.motion-button:hover,.motion-button:active{transform:none!important}.motion-button:before{display:none}.motion-button:hover .label-front,.motion-button:focus-visible .label-front{transform:none}.label-back{display:none}.work-image:hover>span>span{transform:none}.beam-marker{transition:none}}
+.motion-button:focus-visible{color:var(--bg);border-color:var(--signal)}
+.inspection-stage{user-select:none}
+@media(prefers-reduced-motion:reduce){.motion-button:focus-visible,.motion-button.secondary:hover,.motion-button.text-link:hover,.motion-button.header-contact:hover,.service-content a.motion-button:hover{background:var(--signal);color:var(--bg)}}
