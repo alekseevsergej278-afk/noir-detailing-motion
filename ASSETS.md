@@ -1,14 +1,21 @@
-# Материалы
+# Материалы NOIR / Light
 
-Фотографии загружены с Unsplash, с параметрами уменьшения размера и качества. Это демонстрационная редакционная подборка; не портфолио NOIR.
+## Созданы для проекта
 
-| Файл | Источник |
-|---|---|
-| hero.jpg, porsche.jpg | https://images.unsplash.com/photo-1503376780353-7e6692767b70 |
-| detail.jpg | https://images.unsplash.com/photo-1503736334956-4c8f8e92946d |
-| mercedes.jpg | https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8 |
-| interior.jpg | https://images.unsplash.com/photo-1507136566006-cfc505b114fc |
+- dist/assets/atelier.png — студийный кадр чёрного купе; встроенный ImageGen. Полный промпт в atelier.png.json.
+- dist/assets/paint.png — макрокадр чистого чёрного лака; встроенный ImageGen. Полный промпт в paint.png.json.
+- Микроцарапины и движущийся инспекционный свет — собственный Canvas 2D в app.js, а не дефекты на исходном изображении.
+- Линейные иконки и favicon — собственный SVG.
 
-Manrope: Google Fonts, https://github.com/sharanda/manrope (SIL Open Font License). Шрифты размещены локально. CSS получен с https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap.
+Сгенерированные изображения являются материалами визуальной концепции, не документальными фотографиями работ студии. На странице есть соответствующая пометка.
 
-Favicon и линейные SVG-иконки созданы для проекта.
+## Фотография
+
+mercedes.jpg: https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8. Редакционная демонстрация. Происхождение также записано в mercedes.jpg.json.
+
+## Шрифты
+
+- Manrope — https://github.com/sharanda/manrope, SIL Open Font License; лицензия Manrope-OFL.txt.
+- Oswald — https://github.com/googlefonts/OswaldFont, SIL Open Font License; лицензия Oswald-OFL.txt.
+
+Шрифты получены через Google Fonts и размещены локально. Внешних CDN при просмотре страницы нет.
