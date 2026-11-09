@@ -91,23 +91,19 @@
  updateScroll();
 })();
 
-// Light moves through the manifesto and the process as the visitor reads.
+// Light moves through the manifesto as the visitor reads.
 (() => {
  const reduced=matchMedia('(prefers-reduced-motion: reduce)');
  const sentence=document.querySelector('[data-read]');
  sentence.textContent.split(' ').forEach((word,index)=>{if(index===0)sentence.textContent='';const span=document.createElement('span');span.textContent=word+' ';sentence.append(span);});
  const words=[...sentence.children];
- const process=document.querySelector('.approach');
- const line=document.querySelector('.process-indicator span');
- const point=document.querySelector('.process-indicator i');
  let queued=false;
  const clamp=n=>Math.min(1,Math.max(0,n));
  function update(){
   const r=sentence.getBoundingClientRect();const progress=clamp((innerHeight*.85-r.top)/(innerHeight*.7));
   sentence.classList.toggle('read-active',!reduced.matches);
   words.forEach((word,i)=>word.classList.toggle('lit',reduced.matches||i/words.length<progress));
-  const p=process.getBoundingClientRect();const amount=clamp((innerHeight*.55-p.top)/(p.height-innerHeight*.3));
-  line.style.transform=`scaleX(${amount})`;point.style.left=`${amount*100}%`;queued=false;
+  queued=false;
  }
  function schedule(){if(!queued){queued=true;requestAnimationFrame(update);}}
  addEventListener('scroll',schedule,{passive:true});addEventListener('resize',schedule);reduced.addEventListener('change',schedule);update();

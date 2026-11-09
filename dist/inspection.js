@@ -7,11 +7,20 @@
   if (!ctx) return;
   const scratchLayer = document.createElement('canvas');
   const scratchCtx = scratchLayer.getContext('2d');
-  const range = document.querySelector('#beam');
-  const output = document.querySelector('#beam-value');
-  const rail = document.querySelector('.beam-rail');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const buttons = [...document.querySelectorAll('[data-finish]')];
+  const comparison = document.querySelector('#paint-comparison');
+  if (typeof comparison._setPosition !== 'function') return;
+  const handle = comparison.lastElementChild;
+  handle.classList.add('noir-compare-handle');
+  handle.firstElementChild.classList.add('noir-compare-grip');
+  const comparisonPosition = { value: .5 };
+  let settingComparison = false;
+  handle.setAttribute('role', 'slider'); handle.tabIndex = 0;
+  handle.setAttribute('aria-label', 'Сравнение лака. Слева до коррекции, справа после.');
+  handle.setAttribute('aria-valuemin', '0'); handle.setAttribute('aria-valuemax', '100');
+  handle.setAttribute('aria-valuenow', '50');
+
   let width = 1, height = 1, frame = 0;
   let lightX = .52, lightY = .5, targetX = .52, targetY = .5;
   let defects = 1, targetDefects = 1, dragging = false;
@@ -74,10 +83,6 @@
   function requestDraw() { if (!frame) frame = requestAnimationFrame(draw); }
   function move(x, y = targetY) {
     targetX = clamp(x); targetY = Math.max(.15, Math.min(.85, y));
-    const percentage = Math.round(targetX * 100);
-    range.value = String(percentage);
-    output.value = `${percentage}%`;
-    rail.style.setProperty('--position', `${percentage}%`);
     requestDraw();
   }
   function point(event) {
@@ -89,23 +94,69 @@
     point(event);
   }, { passive: true });
   stage.addEventListener('pointerdown', event => {
-    // On touch screens, the dedicated range remains the drag surface so page scrolling stays native.
+    if (event.target.closest('.noir-compare-handle')) return;
+    // A touch positions the lamp while vertical scrolling stays native.
     if (event.pointerType === 'touch') { point(event); return; }
     event.preventDefault(); dragging = true; stage.setPointerCapture(event.pointerId); stage.classList.add('is-dragging'); point(event);
   });
   function release() { dragging = false; stage.classList.remove('is-dragging'); }
   stage.addEventListener('pointerup', release);
   stage.addEventListener('pointercancel', release);
-  range.addEventListener('input', () => move(Number(range.value) / 100, .5));
+  stage.addEventListener('keydown', event => {
+    const step = event.shiftKey ? .1 : .025;
+    const directions = { ArrowLeft: [-step,0], ArrowRight: [step,0], ArrowUp: [0,-step], ArrowDown: [0,step] };
+    if (directions[event.key]) {
+      event.preventDefault();
+      move(targetX + directions[event.key][0], targetY + directions[event.key][1]);
+    } else if (event.key === 'Home') { event.preventDefault(); move(.5,.5); }
+  });
   buttons.forEach(button => button.addEventListener('click', () => {
     const after = button.dataset.finish === 'after';
     targetDefects = after ? 0 : 1;
+    setComparison(after ? 0 : 1);
     buttons.forEach(b => { b.classList.toggle('active', b === button); b.setAttribute('aria-pressed', String(b === button)); });
     document.querySelector('#surface-state').textContent = after ? 'После коррекции' : 'До коррекции';
     document.querySelector('#inspection-caption').textContent = after ? 'Чёткое отражение. Поверхность после коррекции.' : 'Микроцарапины проявляются только в области света.';
     stage.dataset.finish = after ? 'after' : 'before';
     requestDraw();
   }));
+  // Adapter for pinned GoogleChromeLabs Two-Up 1.0.1, which exposes no public position setter.
+  // Keep its pixel and relative coordinates synchronized so subsequent dragging never jumps.
+  function setComparison(value, animate = true) {
+    settingComparison = true;
+    gsap.to(comparisonPosition, {
+      value: clamp(value), duration: animate && !reduced.matches ? .65 : 0, ease: 'power3.out', overwrite: true,
+      onUpdate() {
+        comparison._relativePosition = comparisonPosition.value;
+        comparison._position = comparisonPosition.value * comparison.getBoundingClientRect().width;
+        comparison._setPosition();
+      },
+      onComplete() { settingComparison = false; }
+    });
+  }
+  function compare() {
+    gsap.killTweensOf(comparisonPosition); settingComparison = false;
+    comparisonPosition.value = comparison._relativePosition;
+    targetDefects = 1;
+    buttons.forEach(button => { button.classList.remove('active'); button.setAttribute('aria-pressed', 'false'); });
+    document.querySelector('#surface-state').textContent = 'Сравнение';
+    document.querySelector('#inspection-caption').textContent = 'Слева — до коррекции. Справа — после.';
+    requestDraw();
+  }
+  handle.addEventListener('pointerdown', compare);
+  handle.addEventListener('keydown', event => {
+    const key = event.key;
+    if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(key)) return;
+    event.preventDefault(); event.stopPropagation(); compare();
+    const amount = event.shiftKey ? .1 : .025;
+    const position = key === 'Home' ? 0 : key === 'End' ? 1 : comparisonPosition.value + (key === 'ArrowLeft' ? -amount : amount);
+    setComparison(position, false);
+  });
+  new MutationObserver(() => {
+    const position = comparison._relativePosition;
+    handle.setAttribute('aria-valuenow', String(Math.round(position * 100)));
+    if (!settingComparison) comparisonPosition.value = position;
+  }).observe(comparison, { attributes: true, attributeFilter: ['style'] });
   function resize() {
     const rect = stage.getBoundingClientRect(); width = rect.width; height = rect.height;
     const dpr = Math.min(devicePixelRatio || 1, 2);
