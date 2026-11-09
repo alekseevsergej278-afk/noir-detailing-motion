@@ -13,7 +13,12 @@
   if (typeof comparison._setPosition !== 'function') return;
   const handle = comparison.lastElementChild;
   handle.classList.add('noir-compare-handle');
-  handle.firstElementChild.classList.add('noir-compare-grip');
+  const grip = handle.firstElementChild;
+  grip.classList.add('noir-compare-grip');
+  const gripIcon = grip.querySelector('svg');
+  gripIcon.setAttribute('viewBox', '0 0 24 24');
+  gripIcon.setAttribute('aria-hidden', 'true');
+  gripIcon.innerHTML = '<use href="#drag"/>';
   const comparisonPosition = { value: .5 };
   let settingComparison = false;
   handle.setAttribute('role', 'slider'); handle.tabIndex = 0;

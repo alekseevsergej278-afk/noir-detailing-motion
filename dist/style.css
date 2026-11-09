@@ -159,6 +159,13 @@ h3 {
 .menu-toggle,.mobile-nav {
   display:none
 }
+.menu-toggle .menu-close-icon,
+.menu-toggle[aria-expanded="true"] .menu-icon {
+  display:none
+}
+.menu-toggle[aria-expanded="true"] .menu-close-icon {
+  display:block
+}
 .hero {
   height:100svh;
   min-height:800px;
@@ -601,13 +608,12 @@ input[type=range]::-moz-range-thumb {
   align-items:center;
   gap:20px;
   cursor:pointer;
-  transition:padding .4s var(--ease),color .3s
+  transition:color .25s
 }
 .service summary::-webkit-details-marker {
   display:none
 }
 .service summary:hover {
-  padding-left:10px;
   color:var(--signal)
 }
 .service-title {
@@ -620,16 +626,18 @@ input[type=range]::-moz-range-thumb {
   gap:22px;
   align-items:center;
   color:var(--muted);
-  font-size:11px;
+  font-size:12px;
+  font-variant-numeric:tabular-nums;
   flex-shrink:0
 }
 .service-meta svg {
   width:17px;
   height:17px;
-  transition:transform .4s
+  transition:transform .3s var(--ease),color .25s
 }
 .service[open] .service-meta svg {
-  transform:rotate(45deg)
+  color:var(--signal);
+  transform:rotate(180deg)
 }
 .service[open] summary {
   color:var(--signal)
@@ -639,6 +647,24 @@ input[type=range]::-moz-range-thumb {
   color:var(--muted);
   font-size:12px;
   animation:appear .5s both
+}
+@supports (interpolate-size:allow-keywords) and selector(details::details-content) {
+  .service::details-content {
+    interpolate-size:allow-keywords;
+    block-size:0;
+    overflow:clip
+  }
+  .service[open]::details-content {
+    block-size:auto
+  }
+  .service-content {
+    animation:none
+  }
+  @media(prefers-reduced-motion:no-preference) {
+    .service::details-content {
+      transition:block-size .32s var(--ease),content-visibility .32s allow-discrete
+    }
+  }
 }
 .service-content footer {
   display:flex;
@@ -922,6 +948,10 @@ input[type=range]::-moz-range-thumb {
   color:var(--muted);
   font-size:11px
 }
+.footer-legal a:hover {
+  color:var(--ink);
+  text-decoration:underline
+}
 .lightbox {
   position:fixed;
   inset:0;
@@ -1110,21 +1140,15 @@ input[type=range]::-moz-range-thumb {
     display:none
   }
   .menu-toggle {
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    gap:7px;
+    display:grid;
+    place-items:center;
+    color:var(--ink);
     background:none;
     border:1px solid #60695b;
+    border-radius:50%;
     width:44px;
     height:44px;
-    padding:12px
-  }
-  .menu-toggle span {
-    height:1px;
-    background:var(--ink);
-    width:18px;
-    transition:transform .45s var(--ease)
+    padding:0
   }
   .menu-open {
     overflow:hidden
@@ -1132,12 +1156,6 @@ input[type=range]::-moz-range-thumb {
   .menu-open .header {
     position:fixed;
     background:var(--bg)
-  }
-  .menu-open .menu-toggle span:first-child {
-    transform:translateY(4px) rotate(45deg)
-  }
-  .menu-open .menu-toggle span:last-child {
-    transform:translateY(-4px) rotate(-45deg)
   }
   .mobile-nav {
     display:flex;
@@ -1687,7 +1705,7 @@ input[type=range]::-moz-range-thumb {
 #paint-comparison img{width:100%;height:100%;object-fit:cover;object-position:center}
 #paint-comparison .noir-compare-handle{z-index:4;outline-offset:-4px}
 #paint-comparison .noir-compare-grip{height:var(--thumb-size);border:1px solid var(--signal);border-radius:50%;box-shadow:none;padding:0 17px}
-#paint-comparison .noir-compare-grip svg{width:100%;height:100%;stroke:none;fill:currentColor}
+#paint-comparison .noir-compare-grip svg{width:100%;height:100%}
 #paint-comparison [aria-valuenow="0"] .noir-compare-grip{left:100%}
 #paint-comparison [aria-valuenow="100"] .noir-compare-grip{left:0}
 #paint-comparison .noir-compare-handle:focus-visible .noir-compare-grip,#inspection-stage:focus-visible{outline:2px solid var(--signal);outline-offset:3px}

@@ -14,11 +14,12 @@
 
  config.services.forEach(([title, price, description, time], index) => {
   const item = document.createElement('details'); item.className = 'service';
+  item.setAttribute('name', 'noir-services');
   const summary = document.createElement('summary');
   const name = document.createElement('span'); name.className = 'service-title'; name.textContent = title;
   const meta = document.createElement('span'); meta.className = 'service-meta';
   const cost = document.createElement('span'); cost.textContent = price;
-  meta.append(cost); meta.insertAdjacentHTML('beforeend', '<svg aria-hidden="true"><use href="#plus"/></svg>');
+  meta.append(cost); meta.insertAdjacentHTML('beforeend', '<svg aria-hidden="true"><use href="#chevron"/></svg>');
   summary.append(name, meta);
   const content = document.createElement('div'); content.className = 'service-content';
   const desc = document.createElement('p'); desc.textContent = description;
@@ -28,7 +29,21 @@
   footer.append(duration, link); content.append(desc, footer); item.append(summary, content); list.append(item);
   item.addEventListener('pointerenter', () => previewService(index));
   summary.addEventListener('focus', () => previewService(index));
-  item.addEventListener('toggle', () => { if (item.open) previewService(index); if (item.open) list.querySelectorAll('details').forEach(other => { if (other !== item) other.open = false; }); });
+  item.addEventListener('toggle', () => {
+   if (!item.open) return;
+   previewService(index);
+   // Older browsers do not enforce exclusive disclosure groups.
+   if (!('name' in item)) list.querySelectorAll('details[open]').forEach(other => { if (other !== item) other.open = false; });
+  });
+ });
+ list.addEventListener('keydown', event => {
+  if (!event.target.matches('summary') || !['ArrowUp', 'ArrowDown', 'Home', 'End'].includes(event.key)) return;
+  const summaries = [...list.querySelectorAll('summary')];
+  const index = summaries.indexOf(event.target);
+  const offset = event.key === 'ArrowDown' ? 1 : -1;
+  const next = event.key === 'Home' ? 0 : event.key === 'End' ? summaries.length - 1 : (index + offset + summaries.length) % summaries.length;
+  event.preventDefault();
+  summaries[next].focus();
  });
  document.querySelectorAll('[data-config]').forEach(el => { if (config[el.dataset.config]) el.textContent = config[el.dataset.config]; });
  document.querySelector('#year').textContent = new Date().getFullYear();

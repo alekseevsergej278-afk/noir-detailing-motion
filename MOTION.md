@@ -15,6 +15,10 @@ Mouse movement and taps position the lamp on the photograph. On touch screens th
 
 The lamp and scratches are clipped to the painted hood. The contour is defined in the source image's coordinates and follows the centered crop as the frame resizes.
 
+## Services accordion
+
+The services section adapts the [shadcn/ui Accordion](https://ui.shadcn.com/docs/components/radix/accordion) to native HTML details. The list keeps one panel open at a time, moves keyboard focus with arrow keys, Home and End, and animates panel height where supported.
+
 ## Motion preference
 
 prefers-reduced-motion disables text travel, magnetic displacement and label rolls; inspection state changes snap. The controls and all information remain available.
