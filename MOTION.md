@@ -2,12 +2,12 @@
 
 ## References researched for this update
 
-- GSAP SplitText masks: https://gsap.com/docs/v3/Plugins/SplitText/masks/ — masked word/line reveals with stagger; implemented locally for section headings with accessible parent labels and responsive natural word wrapping.
+- Motion: https://motion.dev/docs/react — gallery rotation follows local scroll progress. Motion also animates section heading masks, button hover and press, and the page reading indicator.
 - Codrops Magnetic Buttons: https://tympanus.net/codrops/2020/08/05/magnetic-buttons/ — restrained pointer attraction and independent label motion. NOIR uses oval targets, a rolling duplicate label and a directional color fill. Touch targets remain stable.
 - Codrops Dynamic CSS Masks: https://tympanus.net/codrops/2021/05/04/dynamic-css-masks-with-custom-properties-and-gsap/ — pointer-controlled spotlight concept. NOIR uses a custom Canvas 2D lamp with damped x/y movement and seeded surface defects.
 - GoogleChromeLabs Two-Up: https://github.com/GoogleChromeLabs/two-up — large comparison handle and deliberate touch target. NOIR uses the Two-Up component for an inline split between simulated defects and clean paint.
 
-GSAP 3.13 with SplitText and ScrollTrigger and Two-Up 1.0.1 are hosted locally in dist/assets/vendor. The Codrops-inspired interactions are implemented in dist/motion.js, dist/inspection.js and dist/style.css.
+Motion ships with the React gallery bundle. The site effects are in src/site-motion.ts and dist/style.css. Two-Up 1.0.1 is hosted locally in dist/assets/vendor.
 
 ## Inspection controls
 
@@ -21,4 +21,4 @@ The services section adapts the [shadcn/ui Accordion](https://ui.shadcn.com/docs
 
 ## Motion preference
 
-prefers-reduced-motion disables text travel, magnetic displacement and label rolls; the inspection light tracks the pointer without easing. The controls and all information remain available.
+prefers-reduced-motion disables text travel, gallery scroll rotation, button movement and label rolls; the inspection light tracks the pointer without easing. The controls and all information remain available.

@@ -18,7 +18,7 @@ body {
   margin:0;
   color:var(--ink);
   background:var(--bg);
-  font:400 14px/1.7 Manrope,sans-serif
+  font:400 14px/1.7 "Golos Text Variable",Manrope,sans-serif
 }
 ::selection {
   background:var(--signal);
@@ -675,6 +675,7 @@ input[type=range]::-moz-range-thumb {
 .work {
   padding-bottom:125px
 }
+[data-gallery-fallback][hidden] { display:none }
 .work-gallery {
   display:grid;
   grid-template-columns:1.45fr 1fr;
@@ -1587,11 +1588,10 @@ input[type=range]::-moz-range-thumb {
 .word-mask>span{display:block;transform:translateY(115%);opacity:.2;transition:transform .95s var(--ease),opacity .6s;transition-delay:var(--word-delay,0ms)}
 .type-in .word-mask>span{transform:translateY(0);opacity:1}
 /* Oval buttons: a controlled label roll, directional fill and a small magnetic response. */
-.motion-button{position:relative;isolation:isolate;overflow:hidden;transform:translate(var(--magnet-x,0px),var(--magnet-y,0px));transition:transform .45s var(--ease),color .3s,border-color .3s}
+.motion-button{position:relative;isolation:isolate;overflow:hidden;transition:color .3s,border-color .3s}
 .motion-button:before{content:'';position:absolute;inset:0;z-index:-1;background:var(--signal);transform:translateY(105%);transition:transform .5s var(--ease);border-radius:inherit}
 .motion-button.primary:before{background:var(--ink)}
 .motion-button:hover:before,.motion-button:focus-visible:before{transform:translateY(0)}
-.motion-button:hover{transform:translate(var(--magnet-x,0px),var(--magnet-y,-2px))}
 .motion-button.primary:hover{background:var(--signal)}
 .motion-button.secondary:hover,.motion-button.text-link:hover,.motion-button.header-contact:hover,.service-content a.motion-button:hover{background:transparent;color:var(--bg);border-color:var(--signal)}
 .button-label{display:block;position:relative;overflow:hidden;line-height:1.5;min-width:0}
@@ -1599,7 +1599,6 @@ input[type=range]::-moz-range-thumb {
 .label-back{position:absolute;inset:0;transform:translateY(110%)}
 .motion-button:hover .label-front,.motion-button:focus-visible .label-front{transform:translateY(-110%)}
 .motion-button:hover .label-back,.motion-button:focus-visible .label-back{transform:translateY(0)}
-.motion-button:active{transform:scale(.97)}
 .desktop-nav a{position:relative;padding:6px 0}
 .desktop-nav a:after{content:'';position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--signal);transform:scaleX(0);transform-origin:right;transition:transform .45s var(--ease)}
 .desktop-nav a:hover:after,.desktop-nav a:focus-visible:after{transform:scaleX(1);transform-origin:left}
@@ -1649,7 +1648,4 @@ input[type=range]::-moz-range-thumb {
 #paint-comparison .noir-compare-handle:focus-visible .noir-compare-grip,#inspection-stage:focus-visible{outline:2px solid var(--signal);outline-offset:3px}
 #paint-comparison .noir-compare-handle:before{box-shadow:none}
 .inspection-top,.inspection-bottom{pointer-events:none;z-index:5}
-.gsap-word,.gsap-word-mask{color:inherit!important}
-h2 .gsap-word-mask{padding-bottom:.1em;margin-bottom:-.1em;vertical-align:top}
-.gsap-magnet{transition:color .3s,border-color .3s,background .3s}
 @media(max-width:767px){#paint-comparison{--thumb-size:48px;--bar-touch-size:48px}}

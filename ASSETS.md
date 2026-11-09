@@ -17,9 +17,15 @@ Solar Icons Linear от 480 Design, [CC BY 4.0](https://creativecommons.org/lice
 
 mercedes.jpg: https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8. Редакционная демонстрация. Происхождение также записано в mercedes.jpg.json.
 
+- gallery-interior.jpg — [салон McLaren, Rahul Bhogal](https://unsplash.com/photos/gNfTPdXSl5Y).
+- gallery-taillight.jpg — [фонарь Porsche, Ryan Spence](https://unsplash.com/photos/mND49Q5kcMA).
+
+Фотографии распространяются по [лицензии Unsplash](https://unsplash.com/license).
+
 ## Шрифты
 
 - Manrope — https://github.com/sharanda/manrope, SIL Open Font License; лицензия Manrope-OFL.txt.
+- Golos Text — https://fonts.google.com/specimen/Golos+Text, SIL Open Font License; лицензия Golos-Text-OFL.txt.
 - Oswald — https://github.com/googlefonts/OswaldFont, SIL Open Font License; лицензия Oswald-OFL.txt.
 
 Шрифты получены через Google Fonts и размещены локально. Внешних CDN при просмотре страницы нет.

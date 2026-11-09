@@ -81,10 +81,12 @@
  });
  matchMedia('(min-width:768px)').addEventListener('change', e => { if (e.matches) setMenu(false); });
  const lightbox = document.querySelector('.lightbox');
- document.querySelectorAll('.work-image').forEach(button => button.addEventListener('click', () => {
+ document.querySelector('#work').addEventListener('click', event => {
+  const button = event.target.closest('button[data-image]');
+  if (!button) return;
   lightbox.querySelector('img').src = button.dataset.image; lightbox.querySelector('img').alt = button.querySelector('img').alt;
   lightbox.querySelector('p').textContent = button.dataset.caption; lightbox.showModal(); document.body.style.overflow = 'hidden';
- }));
+ });
  lightbox.querySelector('button').addEventListener('click', () => lightbox.close());
  lightbox.addEventListener('click', e => { if (e.target === lightbox) { const r = lightbox.getBoundingClientRect(); if(e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) lightbox.close(); } });
  lightbox.addEventListener('close', () => { document.body.style.overflow = ''; });
@@ -93,10 +95,8 @@
   const observer = new IntersectionObserver(entries => entries.forEach(entry => { if(entry.isIntersecting) { entry.target.classList.remove('is-pending'); observer.unobserve(entry.target); } }), {threshold:.08});
   document.querySelectorAll('.reveal,.image-reveal').forEach(el => { if(el.getBoundingClientRect().top > innerHeight && !reduceMotion.matches) el.classList.add('is-pending'); observer.observe(el); });
  }
- const progress = document.querySelector('.reading-progress'); const photos = [...document.querySelectorAll('[data-parallax]')]; let scheduled = false;
+ const photos = [...document.querySelectorAll('[data-parallax]')]; let scheduled = false;
  function updateScroll() {
-  const range = document.documentElement.scrollHeight - innerHeight;
-  progress.style.transform = 'scaleX(' + (range > 0 ? scrollY / range : 0) + ')';
   if (!reduceMotion.matches) photos.forEach(img => { const rect = img.parentElement.getBoundingClientRect(); if(rect.bottom > 0 && rect.top < innerHeight) { const amount = innerWidth < 768 ? 10 : 24; const offset = (rect.top + rect.height/2 - innerHeight/2) / innerHeight * amount; img.style.transform = `scale(1.07) translateY(${offset}px)`; } });
   scheduled = false;
  }

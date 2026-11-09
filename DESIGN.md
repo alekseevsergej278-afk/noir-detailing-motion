@@ -8,7 +8,7 @@ One solid graphite background across the entire page: #101211. Sections remain t
 
 ## Tokens
 - Background #101211; foreground #eeeee8; secondary #a5aaa5; dividers #343a34; action and inspection signal #dfed9b.
-- Oswald 400 for uppercase display typography; Manrope 400–800 for reading and interface. Both hosted locally.
+- Oswald 400 for uppercase display typography; Golos Text 400–900 for reading and interface. Both hosted locally.
 - Display 34–106px, reading text 12–14px, metadata 11px. Hero and wordmark receive dedicated responsive scaling.
 - Gutters 5.5% desktop / 6% mobile. Major section rhythm 125–130px desktop / 75–85px mobile.
 - Pill-shaped action buttons with 999px radius, including outlined editorial actions. Thin dividers preserve the flat composition.
@@ -24,4 +24,4 @@ Generated studio imagery and simulated defects are disclosed; no fake portfolio,
 
 ## Updated controls and choreography
 
-Pill-shaped CTAs, and outlined editorial actions. GSAP SplitText masks reveal section headings in 55ms stagger steps; duplicated labels roll on hover, with the duplicate hidden from screen readers. Small pointer attraction applies only to fine-pointer devices. The lamp has damped X/Y movement. A round 58px grip moves the split within the photograph, with a 48px grip on mobile. Scratch exposure is alpha-masked in a separate canvas, preventing defects from extending outside the light. Reduced-motion focus/hover styles keep contrast without animated fills. Sources: MOTION.md.
+Pill-shaped CTAs, and outlined editorial actions. Motion reveals section headings with a rising mask and animates the hover and press feedback of the pill buttons. The circular gallery rotates with local scroll progress and offers manual controls. The lamp has damped X/Y movement. A round 58px grip moves the split within the photograph, with a 48px grip on mobile. Scratch exposure is alpha-masked in a separate canvas, preventing defects from extending outside the light. Reduced-motion focus/hover styles keep contrast without animated fills. Sources: MOTION.md.

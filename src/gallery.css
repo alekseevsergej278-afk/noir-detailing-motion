@@ -1,0 +1,93 @@
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" source(none);
+@source "../components";
+@source "./";
+
+@theme inline {
+  --color-background: var(--bg);
+  --color-foreground: var(--ink);
+  --color-card: var(--bg);
+  --color-card-foreground: var(--ink);
+  --color-border: var(--line);
+  --color-muted-foreground: var(--muted);
+  --color-primary: var(--signal);
+  --color-primary-foreground: var(--bg);
+  --color-ring: var(--signal);
+}
+
+.noir-orbit {
+  --orbit-radius: clamp(132px, 28vw, 330px);
+  --orbit-card-width: min(77%, 520px);
+  --orbit-card-height: clamp(224px, 31vw, 360px);
+}
+.orbit-scene {
+  height: calc(var(--orbit-card-height) + 86px);
+  perspective: 2000px;
+  overflow: clip;
+  touch-action: pan-y;
+  user-select: none;
+}
+.orbit-scene:focus-visible { outline: 1px solid var(--signal); outline-offset: 4px }
+.orbit-ring { transform-style: preserve-3d }
+.orbit-slot {
+  left: 50%;
+  top: 50%;
+  width: var(--orbit-card-width);
+  height: var(--orbit-card-height);
+  translate: -50% -50%;
+  transform: rotateY(var(--item-angle)) translateZ(var(--orbit-radius));
+  backface-visibility: hidden;
+  opacity: .68;
+  transition: opacity .35s ease;
+}
+.orbit-slot[data-active="true"] { opacity: 1 }
+.orbit-slot[data-active="false"]:not([data-near="true"]) { pointer-events: none }
+.orbit-card {
+  border: 1px solid #e6edd445;
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+}
+.orbit-card:focus-visible { outline-offset: -5px }
+.orbit-caption {
+  gap: 14px;
+  padding: 52px 22px 18px;
+  background: linear-gradient(0deg,#0b0e0de8,transparent);
+}
+.orbit-caption strong { display: block; font-size: clamp(18px,2.5vw,29px); font-weight: 500; line-height: 1.1 }
+.orbit-caption small { display: block; margin-top: 5px; font-size: 12px; color: #dfdfd9 }
+.orbit-caption svg { width: 18px; height: 18px; margin-bottom: 2px }
+.orbit-slot[data-active="false"] .orbit-caption { visibility: hidden }
+.orbit-nav {
+  border-top: 1px solid var(--line);
+  padding-top: 13px;
+  gap: 16px;
+}
+.orbit-position { color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums }
+.orbit-position span:first-child { color: var(--ink); font-size: 20px }
+.orbit-buttons { gap: 9px }
+.orbit-buttons button {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 44px;
+  border: 1px solid #626a5c;
+  border-radius: 999px;
+  background: var(--bg);
+  color: var(--ink);
+  transition: border-color .2s, color .2s;
+}
+.orbit-buttons button:hover { border-color: var(--signal); color: var(--signal) }
+.orbit-buttons svg { width: 17px; height: 17px }
+
+@media (max-width: 767px) {
+  .noir-orbit { --orbit-card-height: clamp(208px, 49vw, 295px) }
+  .orbit-scene { height: calc(var(--orbit-card-height) + 34px) }
+  .orbit-caption { padding: 42px 15px 14px }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbit-slot, .orbit-buttons button { transition: none }
+}
