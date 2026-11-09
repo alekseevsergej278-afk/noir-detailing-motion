@@ -1684,7 +1684,7 @@ input[type=range]::-moz-range-thumb {
 /* Actual GoogleChromeLabs Two-Up component, styled to the NOIR surface. */
 #paint-comparison{height:100%;width:100%;--thumb-size:58px;--bar-size:1px;--bar-touch-size:58px;--track-color:#e6efd670;--thumb-background:#101211;--thumb-color:#dfed9b}
 #paint-comparison>.comparison-before,#paint-comparison>.comparison-after{position:relative;width:100%;height:100%;min-width:0;overflow:hidden}
-#paint-comparison img{width:100%;height:100%;object-fit:cover}
+#paint-comparison img{width:100%;height:100%;object-fit:cover;object-position:center}
 #paint-comparison .noir-compare-handle{z-index:4;outline-offset:-4px}
 #paint-comparison .noir-compare-grip{height:var(--thumb-size);border:1px solid var(--signal);border-radius:50%;box-shadow:none;padding:0 17px}
 #paint-comparison .noir-compare-grip svg{width:100%;height:100%;stroke:none;fill:currentColor}

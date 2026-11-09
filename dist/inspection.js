@@ -21,6 +21,11 @@
   handle.setAttribute('aria-valuemin', '0'); handle.setAttribute('aria-valuemax', '100');
   handle.setAttribute('aria-valuenow', '50');
 
+  // Trace the painted hood in paint.png's 1672 × 941 coordinate space.
+  const hoodOutline = new Path2D('M 0 82 C 108 79 195 61 270 61 C 495 61 723 99 943 155 C 1210 222 1450 350 1635 499 C 1665 529 1602 613 1527 662 C 1365 769 1148 835 1014 941 H 0 Z');
+  const photoWidth = 1672;
+  const photoHeight = 941;
+  let hoodMask;
   let width = 1, height = 1, frame = 0;
   let lightX = .52, lightY = .5, targetX = .52, targetY = .5;
   let defects = 1, targetDefects = 1, dragging = false;
@@ -41,6 +46,8 @@
     lightY += (targetY - lightY) * ease;
     defects += (targetDefects - defects) * (reduced.matches ? 1 : .1);
     ctx.clearRect(0, 0, width, height);
+    ctx.save();
+    ctx.clip(hoodMask);
     const x = lightX * width, y = lightY * height;
     const radius = Math.min(width * .38, height * .64);
     const lamp = ctx.createRadialGradient(x, y, 0, x, y, radius);
@@ -74,6 +81,7 @@
       scratchCtx.globalCompositeOperation = 'source-over';
       ctx.drawImage(scratchLayer, 0, 0, width, height);
     }
+    ctx.restore();
     stage.style.setProperty('--beam', `${lightX * 100}%`);
     stage.style.setProperty('--beam-y', `${lightY * 100}%`);
     if (Math.abs(lightX - targetX) > .0005 || Math.abs(lightY - targetY) > .0005 || Math.abs(defects - targetDefects) > .002) {
@@ -159,6 +167,12 @@
   }).observe(comparison, { attributes: true, attributeFilter: ['style'] });
   function resize() {
     const rect = stage.getBoundingClientRect(); width = rect.width; height = rect.height;
+    // Match the photograph's centered object-fit: cover crop at every breakpoint.
+    const scale = Math.max(width / photoWidth, height / photoHeight);
+    hoodMask = new Path2D();
+    hoodMask.addPath(hoodOutline, new DOMMatrix([
+      scale, 0, 0, scale, (width - photoWidth * scale) / 2, (height - photoHeight * scale) / 2
+    ]));
     const dpr = Math.min(devicePixelRatio || 1, 2);
     canvas.width = Math.round(width * dpr); canvas.height = Math.round(height * dpr);
     scratchLayer.width = Math.ceil(width); scratchLayer.height = Math.ceil(height);
