@@ -2,10 +2,10 @@ import {
   forwardRef, useEffect, useRef, useState,
   type CSSProperties, type HTMLAttributes, type KeyboardEvent,
 } from "react";
-import { Maximize2, Pause, Play } from "lucide-react";
+import { Maximize2 } from "lucide-react";
 import {
   animate, motion, useInView, useMotionValue, useMotionValueEvent,
-  useReducedMotion, useScroll, useTransform,
+  useReducedMotion, useScroll, useSpring, useTransform,
 } from "motion/react";
 import { cn } from "@/lib/utils";
 
@@ -31,25 +31,26 @@ export const CircularGallery = forwardRef<HTMLDivElement, CircularGalleryProps>(
     const scene = useRef<HTMLDivElement>(null);
     const pointerStart = useRef<{ x: number; y: number } | null>(null);
     const suppressClickUntil = useRef(0);
-    const lastInteraction = useRef(0);
+    const resumeAt = useRef(0);
     const turnTarget = useRef<number | null>(null);
     const lastProgress = useRef(0);
     const scrollAngle = useRef<number | null>(null);
     const rotation = useMotionValue(0);
-    const turnAngle = useTransform(rotation, (value) => `${value}deg`);
-    const rotateY = useTransform(rotation, (value) => `rotateY(${-value}deg)`);
     const reduced = useReducedMotion();
+    const easedRotation = useSpring(rotation, { stiffness: 180, damping: 24, mass: 0.45 });
+    const displayRotation = reduced ? rotation : easedRotation;
+    const turnAngle = useTransform(displayRotation, (value) => `${value}deg`);
+    const rotateY = useTransform(displayRotation, (value) => `rotateY(${-value}deg)`);
     const visible = useInView(scene, { amount: 0.2 });
     const { scrollYProgress } = useScroll({
       target: track, offset: ["start 0.08", "end 0.08"],
     });
     const [activeIndex, setActiveIndex] = useState(0);
-    const [playing, setPlaying] = useState(true);
     const [focused, setFocused] = useState(false);
     const step = 360 / Math.max(1, items.length);
     const active = wrap(activeIndex, Math.max(1, items.length));
 
-    useMotionValueEvent(rotation, "change", (value) => {
+    useMotionValueEvent(displayRotation, "change", (value) => {
       setActiveIndex(wrap(Math.round(value / step), Math.max(1, items.length)));
     });
 
@@ -62,7 +63,7 @@ export const CircularGallery = forwardRef<HTMLDivElement, CircularGalleryProps>(
       const delta = pinnedProgress - lastProgress.current;
       lastProgress.current = pinnedProgress;
       if (!delta || focused) return;
-      lastInteraction.current = performance.now();
+      resumeAt.current = performance.now() + 180;
       turnTarget.current = null;
       rotation.stop();
       const next = (scrollAngle.current ?? rotation.get()) + delta * 360;
@@ -74,9 +75,9 @@ export const CircularGallery = forwardRef<HTMLDivElement, CircularGalleryProps>(
     useEffect(() => () => rotation.stop(), [rotation]);
 
     useEffect(() => {
-      if (!playing || !visible || focused || !autoRotateSpeed || items.length < 2) return;
+      if (!visible || focused || !autoRotateSpeed || items.length < 2) return;
       const canAdvance = (time: number) => !document.hidden && !pointerStart.current &&
-        !document.activeElement?.closest("dialog[open]") && time - lastInteraction.current > 900;
+        !document.activeElement?.closest("dialog[open]") && time > resumeAt.current;
       if (reduced) {
         const timer = setInterval(() => {
           if (!canAdvance(performance.now())) return;
@@ -97,10 +98,10 @@ export const CircularGallery = forwardRef<HTMLDivElement, CircularGalleryProps>(
       };
       frame = requestAnimationFrame(tick);
       return () => cancelAnimationFrame(frame);
-    }, [autoRotateSpeed, focused, items.length, playing, reduced, rotation, step, visible]);
+    }, [autoRotateSpeed, focused, items.length, reduced, rotation, step, visible]);
 
     function turn(offset: number) {
-      lastInteraction.current = performance.now();
+      resumeAt.current = performance.now() + 720;
       scrollAngle.current = null;
       const next = (Math.round((turnTarget.current ?? rotation.get()) / step) + offset) * step;
       rotation.stop();
@@ -212,22 +213,6 @@ export const CircularGallery = forwardRef<HTMLDivElement, CircularGalleryProps>(
                 })}
               </motion.div>
             </div>
-            {items.length > 1 && (
-              <div className="orbit-nav flex items-center justify-between">
-                <div className="orbit-position" aria-label={`Кадр ${active + 1} из ${items.length}`}>
-                  <span>{active + 1}</span><span aria-hidden="true"> / {items.length}</span>
-                </div>
-                <div className="orbit-buttons flex items-center">
-                  {autoRotateSpeed > 0 && (
-                    <motion.button type="button" {...navMotion}
-                    onClick={() => { if (playing) turn(0); setPlaying(!playing); }}
-                      aria-label={playing ? "Приостановить галерею" : "Запустить галерею"}>
-                      {playing ? <Pause aria-hidden="true" /> : <Play aria-hidden="true" />}
-                    </motion.button>
-                  )}
-                </div>
-              </div>
-            )}
           </div>
         </div>
       </div>
