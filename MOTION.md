@@ -11,7 +11,7 @@ GSAP 3.13 with SplitText and ScrollTrigger and Two-Up 1.0.1 are hosted locally i
 
 ## Inspection controls
 
-Mouse movement and taps position the lamp on the photograph. On touch screens the round grip drags horizontally and the rest of the photo retains vertical scrolling. Focus the photo to move the lamp with arrow keys. Focus the grip to compare with Left/Right or jump to an edge with Home/End. The before/after buttons show each surface across the whole photograph.
+Mouse movement and taps position the lamp on the photograph. On touch screens the round grip drags horizontally and the rest of the photo retains vertical scrolling. Focus the photo to move the lamp with arrow keys. Focus the grip to compare with Left/Right or jump to an edge with Home/End.
 
 The lamp and scratches are clipped to the painted hood. The contour is defined in the source image's coordinates and follows the centered crop as the frame resizes.
 
@@ -21,4 +21,4 @@ The services section adapts the [shadcn/ui Accordion](https://ui.shadcn.com/docs
 
 ## Motion preference
 
-prefers-reduced-motion disables text travel, magnetic displacement and label rolls; inspection state changes snap. The controls and all information remain available.
+prefers-reduced-motion disables text travel, magnetic displacement and label rolls; the inspection light tracks the pointer without easing. The controls and all information remain available.

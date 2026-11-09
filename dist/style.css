@@ -477,41 +477,6 @@ h3 {
   gap:25px;
   font-size:12px
 }
-.inspection-controls {
-  display:grid;
-  grid-template-columns:1.25fr 1fr 1fr;
-  gap:30px;
-  align-items:center;
-  border-bottom:1px solid var(--line);
-  padding:25px 0
-}
-.state-switch {
-  display:flex;
-  border:1px solid #555e50;
-  width:fit-content
-}
-.state-switch button {
-  background:none;
-  border:0;
-  padding:13px 18px;
-  min-height:48px;
-  font-size:11px;
-  display:flex;
-  align-items:center;
-  gap:16px;
-  transition:background .3s,color .3s
-}
-.state-switch button.active {
-  background:var(--signal);
-  color:var(--bg)
-}
-.state-switch button:not(.active):hover {
-  color:var(--signal)
-}
-.state-switch svg {
-  width:13px;
-  height:13px
-}
 .beam-control {
   display:flex;
   flex-direction:column;
@@ -546,8 +511,10 @@ input[type=range]::-moz-range-thumb {
 }
 .demo-note {
   color:var(--muted);
-  font-size:11px;
-  text-align:right
+  font-size:12px;
+  text-align:right;
+  padding:18px 0;
+  border-bottom:1px solid var(--line)
 }
 .services {
   padding-top:40px;
@@ -1086,15 +1053,8 @@ input[type=range]::-moz-range-thumb {
   .inspection-stage {
     height:470px
   }
-  .inspection-controls {
-    grid-template-columns:1.3fr 1fr
-  }
   .demo-note {
-    grid-column:1/-1;
     text-align:left
-  }
-  .demo-note br {
-    display:none
   }
   .services-body {
     grid-template-columns:1fr 1.65fr;
@@ -1312,26 +1272,8 @@ input[type=range]::-moz-range-thumb {
   .inspection-bottom>span {
     max-width:230px
   }
-  .inspection-controls {
-    grid-template-columns:1fr;
-    gap:23px;
-    padding:22px 0
-  }
-  .state-switch {
-    width:100%
-  }
-  .state-switch button {
-    flex:1;
-    justify-content:center;
-    gap:12px;
-    padding:12px 9px;
-    font-size:11px
-  }
   .beam-control {
     gap:6px
-  }
-  .demo-note {
-    font-size:11px
   }
   .services {
     padding-top:20px;
@@ -1639,8 +1581,6 @@ input[type=range]::-moz-range-thumb {
 .service-content footer { flex-wrap:wrap; }
 .service-content a { border:1px solid #6f796d; border-radius:999px; padding:10px 16px; min-height:42px; text-decoration:none; transition:background .3s,color .3s; }
 .service-content a:hover { background:var(--signal); color:var(--bg); }
-.state-switch { border-radius:999px; overflow:hidden; }
-.state-switch button { border-radius:999px; }
 /* Text: masked stagger rather than a repeated whole-block slide. */
 .type-ready .word-mask,.type-ready .word-mask>span{color:inherit}
 .word-mask{display:inline-block;overflow:clip;vertical-align:top;padding-bottom:.1em;margin-bottom:-.1em}
@@ -1687,7 +1627,6 @@ input[type=range]::-moz-range-thumb {
 #beam::-moz-range-track{height:2px;background:transparent}
 #beam::-moz-range-thumb{width:38px;height:38px;border:1px solid var(--signal);border-radius:50%;outline:0;background:var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23dfed9b' stroke-width='1.4'%3E%3Cpath d='m9 8-4 4 4 4m6-8 4 4-4 4'/%3E%3C/svg%3E") center/24px no-repeat}
 .beam-endpoints{display:flex;justify-content:space-between;gap:15px;color:var(--muted);font-size:11px;margin-top:1px}
-.inspection-controls{align-items:center;padding:26px 0}
 @media(max-width:767px){.beam-marker{width:48px;height:48px}.inspection-stage:hover .beam-marker{width:52px;height:52px}.beam-control{gap:0}.motion-button{--magnet-x:0px;--magnet-y:0px}.beam-slider-head{font-size:12px}}
 @media(prefers-reduced-motion:reduce){.word-mask>span{transform:none!important;opacity:1!important}.motion-button,.motion-button:hover,.motion-button:active{transform:none!important}.motion-button:before{display:none}.motion-button:hover .label-front,.motion-button:focus-visible .label-front{transform:none}.label-back{display:none}.work-image:hover>span>span{transform:none}.beam-marker{transition:none}}
 .motion-button:focus-visible{color:var(--bg);border-color:var(--signal)}
@@ -1696,9 +1635,8 @@ input[type=range]::-moz-range-thumb {
 
 /* The requested UI removals leave compact, balanced inspection controls. */
 .inspection-top{justify-content:flex-end}
-.inspection-controls{display:flex;justify-content:space-between;align-items:center;gap:24px}
 .service-visual small{display:block;margin-top:24px}
-@media(max-width:767px){.inspection-controls{flex-direction:column;align-items:stretch;gap:18px}.inspection-controls .demo-note{text-align:left}.service-visual small{margin-top:0}.service-image{grid-row:span 2}.service-visual{row-gap:20px}}
+@media(max-width:767px){.service-visual small{margin-top:0}.service-image{grid-row:span 2}.service-visual{row-gap:20px}}
 /* Actual GoogleChromeLabs Two-Up component, styled to the NOIR surface. */
 #paint-comparison{height:100%;width:100%;--thumb-size:58px;--bar-size:1px;--bar-touch-size:58px;--track-color:#e6efd670;--thumb-background:#101211;--thumb-color:#dfed9b}
 #paint-comparison>.comparison-before,#paint-comparison>.comparison-after{position:relative;width:100%;height:100%;min-width:0;overflow:hidden}
@@ -1714,4 +1652,4 @@ input[type=range]::-moz-range-thumb {
 .gsap-word,.gsap-word-mask{color:inherit!important}
 h2 .gsap-word-mask{padding-bottom:.1em;margin-bottom:-.1em;vertical-align:top}
 .gsap-magnet{transition:color .3s,border-color .3s,background .3s}
-@media(max-width:767px){#paint-comparison{--thumb-size:48px;--bar-touch-size:48px}.inspection-controls{align-items:stretch}}
+@media(max-width:767px){#paint-comparison{--thumb-size:48px;--bar-touch-size:48px}}

@@ -8,7 +8,6 @@
   const scratchLayer = document.createElement('canvas');
   const scratchCtx = scratchLayer.getContext('2d');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-  const buttons = [...document.querySelectorAll('[data-finish]')];
   const comparison = document.querySelector('#paint-comparison');
   if (typeof comparison._setPosition !== 'function') return;
   const handle = comparison.lastElementChild;
@@ -19,8 +18,6 @@
   gripIcon.setAttribute('viewBox', '0 0 24 24');
   gripIcon.setAttribute('aria-hidden', 'true');
   gripIcon.innerHTML = '<use href="#drag"/>';
-  const comparisonPosition = { value: .5 };
-  let settingComparison = false;
   handle.setAttribute('role', 'slider'); handle.tabIndex = 0;
   handle.setAttribute('aria-label', 'Сравнение лака. Слева до коррекции, справа после.');
   handle.setAttribute('aria-valuemin', '0'); handle.setAttribute('aria-valuemax', '100');
@@ -33,7 +30,7 @@
   let hoodMask;
   let width = 1, height = 1, frame = 0;
   let lightX = .52, lightY = .5, targetX = .52, targetY = .5;
-  let defects = 1, targetDefects = 1, dragging = false;
+  let dragging = false;
   let seed = 27;
   const random = () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
   const scratches = Array.from({ length: 700 }, () => ({
@@ -49,7 +46,6 @@
     const ease = reduced.matches ? 1 : .16;
     lightX += (targetX - lightX) * ease;
     lightY += (targetY - lightY) * ease;
-    defects += (targetDefects - defects) * (reduced.matches ? 1 : .1);
     ctx.clearRect(0, 0, width, height);
     ctx.save();
     ctx.clip(hoodMask);
@@ -61,35 +57,33 @@
     lamp.addColorStop(1, 'rgba(235,242,226,0)');
     ctx.fillStyle = lamp;
     ctx.fillRect(0, 0, width, height);
-    if (defects > .005) {
-      const haze = ctx.createRadialGradient(x, y, 0, x, y, radius);
-      haze.addColorStop(0, `rgba(191,208,193,${.14 * defects})`);
-      haze.addColorStop(1, 'rgba(191,208,193,0)');
-      ctx.fillStyle = haze;
-      ctx.fillRect(0, 0, width, height);
-      scratchCtx.clearRect(0, 0, width, height);
-      scratchCtx.globalCompositeOperation = 'source-over';
-      scratches.forEach(s => {
-        scratchCtx.strokeStyle = `rgba(230,239,228,${s.strength * defects * .62})`;
-        scratchCtx.lineWidth = .7;
-        scratchCtx.beginPath();
-        scratchCtx.arc(s.x * width, s.y * height, s.radius * Math.min(width, height), s.start, s.start + s.length);
-        scratchCtx.stroke();
-      });
-      const exposureMask = scratchCtx.createRadialGradient(x, y, 0, x, y, radius);
-      exposureMask.addColorStop(0, 'rgba(255,255,255,1)');
-      exposureMask.addColorStop(.35, 'rgba(255,255,255,.6)');
-      exposureMask.addColorStop(1, 'rgba(255,255,255,0)');
-      scratchCtx.globalCompositeOperation = 'destination-in';
-      scratchCtx.fillStyle = exposureMask;
-      scratchCtx.fillRect(0, 0, width, height);
-      scratchCtx.globalCompositeOperation = 'source-over';
-      ctx.drawImage(scratchLayer, 0, 0, width, height);
-    }
+    const haze = ctx.createRadialGradient(x, y, 0, x, y, radius);
+    haze.addColorStop(0, 'rgba(191,208,193,.14)');
+    haze.addColorStop(1, 'rgba(191,208,193,0)');
+    ctx.fillStyle = haze;
+    ctx.fillRect(0, 0, width, height);
+    scratchCtx.clearRect(0, 0, width, height);
+    scratchCtx.globalCompositeOperation = 'source-over';
+    scratches.forEach(s => {
+      scratchCtx.strokeStyle = `rgba(230,239,228,${s.strength * .62})`;
+      scratchCtx.lineWidth = .7;
+      scratchCtx.beginPath();
+      scratchCtx.arc(s.x * width, s.y * height, s.radius * Math.min(width, height), s.start, s.start + s.length);
+      scratchCtx.stroke();
+    });
+    const exposureMask = scratchCtx.createRadialGradient(x, y, 0, x, y, radius);
+    exposureMask.addColorStop(0, 'rgba(255,255,255,1)');
+    exposureMask.addColorStop(.35, 'rgba(255,255,255,.6)');
+    exposureMask.addColorStop(1, 'rgba(255,255,255,0)');
+    scratchCtx.globalCompositeOperation = 'destination-in';
+    scratchCtx.fillStyle = exposureMask;
+    scratchCtx.fillRect(0, 0, width, height);
+    scratchCtx.globalCompositeOperation = 'source-over';
+    ctx.drawImage(scratchLayer, 0, 0, width, height);
     ctx.restore();
     stage.style.setProperty('--beam', `${lightX * 100}%`);
     stage.style.setProperty('--beam-y', `${lightY * 100}%`);
-    if (Math.abs(lightX - targetX) > .0005 || Math.abs(lightY - targetY) > .0005 || Math.abs(defects - targetDefects) > .002) {
+    if (Math.abs(lightX - targetX) > .0005 || Math.abs(lightY - targetY) > .0005) {
       frame = requestAnimationFrame(draw);
     } else frame = 0;
   }
@@ -123,52 +117,23 @@
       move(targetX + directions[event.key][0], targetY + directions[event.key][1]);
     } else if (event.key === 'Home') { event.preventDefault(); move(.5,.5); }
   });
-  buttons.forEach(button => button.addEventListener('click', () => {
-    const after = button.dataset.finish === 'after';
-    targetDefects = after ? 0 : 1;
-    setComparison(after ? 0 : 1);
-    buttons.forEach(b => { b.classList.toggle('active', b === button); b.setAttribute('aria-pressed', String(b === button)); });
-    document.querySelector('#surface-state').textContent = after ? 'После коррекции' : 'До коррекции';
-    document.querySelector('#inspection-caption').textContent = after ? 'Чёткое отражение. Поверхность после коррекции.' : 'Микроцарапины проявляются только в области света.';
-    stage.dataset.finish = after ? 'after' : 'before';
-    requestDraw();
-  }));
-  // Adapter for pinned GoogleChromeLabs Two-Up 1.0.1, which exposes no public position setter.
-  // Keep its pixel and relative coordinates synchronized so subsequent dragging never jumps.
-  function setComparison(value, animate = true) {
-    settingComparison = true;
-    gsap.to(comparisonPosition, {
-      value: clamp(value), duration: animate && !reduced.matches ? .65 : 0, ease: 'power3.out', overwrite: true,
-      onUpdate() {
-        comparison._relativePosition = comparisonPosition.value;
-        comparison._position = comparisonPosition.value * comparison.getBoundingClientRect().width;
-        comparison._setPosition();
-      },
-      onComplete() { settingComparison = false; }
-    });
+  // Two-Up 1.0.1 has no public setter. Keep pixel and relative positions aligned for dragging.
+  function setComparison(value) {
+    comparison._relativePosition = clamp(value);
+    comparison._position = comparison._relativePosition * comparison.getBoundingClientRect().width;
+    comparison._setPosition();
   }
-  function compare() {
-    gsap.killTweensOf(comparisonPosition); settingComparison = false;
-    comparisonPosition.value = comparison._relativePosition;
-    targetDefects = 1;
-    buttons.forEach(button => { button.classList.remove('active'); button.setAttribute('aria-pressed', 'false'); });
-    document.querySelector('#surface-state').textContent = 'Сравнение';
-    document.querySelector('#inspection-caption').textContent = 'Слева — до коррекции. Справа — после.';
-    requestDraw();
-  }
-  handle.addEventListener('pointerdown', compare);
   handle.addEventListener('keydown', event => {
     const key = event.key;
     if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(key)) return;
-    event.preventDefault(); event.stopPropagation(); compare();
+    event.preventDefault(); event.stopPropagation();
     const amount = event.shiftKey ? .1 : .025;
-    const position = key === 'Home' ? 0 : key === 'End' ? 1 : comparisonPosition.value + (key === 'ArrowLeft' ? -amount : amount);
-    setComparison(position, false);
+    const position = key === 'Home' ? 0 : key === 'End' ? 1 : comparison._relativePosition + (key === 'ArrowLeft' ? -amount : amount);
+    setComparison(position);
   });
   new MutationObserver(() => {
     const position = comparison._relativePosition;
     handle.setAttribute('aria-valuenow', String(Math.round(position * 100)));
-    if (!settingComparison) comparisonPosition.value = position;
   }).observe(comparison, { attributes: true, attributeFilter: ['style'] });
   function resize() {
     const rect = stage.getBoundingClientRect(); width = rect.width; height = rect.height;
