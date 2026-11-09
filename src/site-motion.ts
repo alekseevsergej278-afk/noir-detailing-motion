@@ -11,8 +11,8 @@ export function initSiteMotion() {
     "h2", "h3", "main p:not(.hero-offer p)", ".manifest-text", ".notice p",
     ".wordmark", ".desktop-nav a", ".hero-foot > span",
     ".service-title", ".service-meta", "#service-visual-title", ".service-visual small", ".service-content footer > span",
-    ".process-step > span", ".process-step > small", ".contact-line > span:last-child",
-    ".inspection-bottom > span", "#surface-state", ".footer-info > div > *", ".footer-wordmark", ".footer-legal > span",
+    ".process-copy", ".contact-line > span:last-child",
+    ".comparison-caption", ".footer-info > div > *", ".footer-wordmark", ".footer-legal > span",
   ].join(","));
 
   function reveal(element: Element, delay = 0) {

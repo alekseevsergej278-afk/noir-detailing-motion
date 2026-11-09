@@ -2,6 +2,17 @@
  'use strict';
  const config = window.NOIR_CONFIG;
  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
+ const processSteps = [...document.querySelectorAll('[data-process-step]')];
+ const processFrames = [...document.querySelectorAll('[data-process-frame]')];
+ processSteps.forEach((step, index) => step.addEventListener('click', () => {
+  if (step.getAttribute('aria-pressed') === 'true') return;
+  processSteps.forEach((item, position) => item.setAttribute('aria-pressed', String(position === index)));
+  processFrames.forEach((frame, position) => {
+   const selected = position === index;
+   frame.classList.toggle('is-active', selected);
+   frame.setAttribute('aria-hidden', String(!selected));
+  });
+ }));
  const list = document.querySelector('#service-list');
  const previewImages = ['paint.png','paint.png','atelier.png','mercedes.jpg','mercedes.jpg','atelier.png','mercedes.jpg','atelier.png'];
  const previewCopy = ['Ясность отражений.\nГлубина цвета.','Сохранить блеск.\nОблегчить уход.','Защитить линии.\nСохранить характер.','Внимание внутри.\nКомфорт каждый день.','Чистота материалов.\nСвежесть ощущений.','Изменить акценты.\nОстаться собой.','Подготовить к встрече.\nСоздать впечатление.','Один автомобиль.\nЦелая программа ухода.'];

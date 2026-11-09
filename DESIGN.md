@@ -14,14 +14,14 @@ One solid graphite background across the entire page: #101211. Sections remain t
 - Pill-shaped action buttons with 999px radius, including outlined editorial actions. Thin dividers preserve the flat composition.
 
 ## Signature interaction
-A custom Canvas 2D inspection lamp moves over a generated macro paint photo. Seeded arcs simulate wash swirls inside the lamp exposure. Two-Up separates the surface under the lamp from the clean surface. Its round grip moves the split inside the photograph. Labels identify the simulation and the grip reports its position through ARIA.
+Three Two-Up comparisons show bodywork, the cabin and a wheel before and after detailing. The thin light divider and round grip carry the inspection motif. The comparison images are generated and labeled as illustrative. Each grip reports its position through ARIA.
 
 ## Motion
-Ease cubic-bezier(.16,1,.3,1). Masked hero lines, photographic lateral reveals, progressive sentence illumination, service-image changes and restrained photo parallax. Passive scroll listeners schedule requestAnimationFrame; canvas stops scheduling once its interpolation settles. Reduced motion snaps inspection state and disables spatial transitions.
+Ease cubic-bezier(.16,1,.3,1). Masked hero lines, photographic lateral reveals, progressive sentence illumination, service-image changes and restrained photo parallax. Passive scroll listeners schedule requestAnimationFrame. Reduced motion disables spatial transitions.
 
 ## Honesty and accessibility
-Generated studio imagery and simulated defects are disclosed; no fake portfolio, testimonials or metrics. Prices, timing and address are demonstrative. Contacts remain unconfigured. Service details, the comparison grip and the gallery dialog support keyboard interaction. Menu supports Escape, focus containment and inert page content.
+Generated studio imagery is disclosed; no fake portfolio, testimonials or metrics. Prices, timing and address are demonstrative. Contacts remain unconfigured. Service details, the comparison grip and the gallery dialog support keyboard interaction. Menu supports Escape, focus containment and inert page content.
 
 ## Updated controls and choreography
 
-Pill-shaped CTAs, and outlined editorial actions. Motion reveals headlines, text and captions as they enter the viewport. Buttons respond to hover and press. The circular gallery rotates on its own and responds to scrolling while pinned. The lamp has damped X/Y movement. A round 58px grip moves the split within the photograph, with a 48px grip on mobile. Scratch exposure is alpha-masked in a separate canvas, preventing defects from extending outside the light. Reduced-motion focus/hover styles keep contrast without animated fills. Sources: MOTION.md.
+Pill-shaped CTAs, and outlined editorial actions. Motion reveals headlines, text and captions as they enter the viewport. Buttons respond to hover and press. The circular gallery rotates on its own and responds to scrolling while pinned. Round grips move the three split boundaries independently. The four approach steps select a large photograph with a short crossfade. Reduced-motion focus/hover styles keep contrast without animated fills. Sources: MOTION.md.
