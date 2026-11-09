@@ -25,7 +25,8 @@ mercedes.jpg: https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8. Ре
 ## Шрифты
 
 - Manrope — https://github.com/sharanda/manrope, SIL Open Font License; лицензия Manrope-OFL.txt.
-- Golos Text — https://fonts.google.com/specimen/Golos+Text, SIL Open Font License; лицензия Golos-Text-OFL.txt.
+- Onest — [Google Fonts](https://fonts.google.com/specimen/Onest), SIL Open Font License. Лицензия Onest-OFL.txt.
+- Cormorant Garamond — [Google Fonts](https://fonts.google.com/specimen/Cormorant+Garamond), SIL Open Font License. Лицензия Cormorant-Garamond-OFL.txt.
 - Oswald — https://github.com/googlefonts/OswaldFont, SIL Open Font License; лицензия Oswald-OFL.txt.
 
 Шрифты получены через Google Fonts и размещены локально. Внешних CDN при просмотре страницы нет.

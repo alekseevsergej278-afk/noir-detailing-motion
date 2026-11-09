@@ -2,7 +2,9 @@ import { useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import { CircularGallery, type GalleryItem } from "@/components/ui/circular-gallery";
 import { initSiteMotion } from "./site-motion";
-import "@fontsource-variable/golos-text";
+import "@fontsource-variable/onest";
+import "@fontsource/cormorant-garamond/cyrillic-600.css";
+import "@fontsource/cormorant-garamond/latin-600.css";
 import "./gallery.css";
 
 const items: GalleryItem[] = [
@@ -27,7 +29,7 @@ function NoirGallery() {
   useEffect(() => {
     document.querySelector<HTMLElement>("[data-gallery-fallback]")?.setAttribute("hidden", "");
   }, []);
-  return <CircularGallery items={items} />;
+  return <CircularGallery items={items} autoRotateSpeed={0.28} />;
 }
 
 const mount = document.querySelector("#circular-gallery");

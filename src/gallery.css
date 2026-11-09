@@ -16,13 +16,20 @@
 }
 
 .noir-orbit {
-  --orbit-radius: clamp(132px, 28vw, 330px);
-  --orbit-card-width: min(77%, 520px);
+  container-type: inline-size;
+  --orbit-radius: min(56cqw, 465px);
+  --orbit-card-width: min(56cqw, 460px);
   --orbit-card-height: clamp(224px, 31vw, 360px);
 }
+.orbit-track[data-scroll="true"]::after {
+  content: "";
+  display: block;
+  height: clamp(430px, 90svh, 900px)
+}
+.orbit-track[data-scroll="true"] .orbit-pin { position: sticky; top: 8svh }
 .orbit-scene {
-  height: calc(var(--orbit-card-height) + 86px);
-  perspective: 2000px;
+  height: calc(var(--orbit-card-height) + 120px);
+  perspective: 2200px;
   overflow: clip;
   touch-action: pan-y;
   user-select: none;
@@ -30,6 +37,7 @@
 .orbit-scene:focus-visible { outline: 1px solid var(--signal); outline-offset: 4px }
 .orbit-ring { transform-style: preserve-3d }
 .orbit-slot {
+  --slot-opacity: .78;
   left: 50%;
   top: 50%;
   width: var(--orbit-card-width);
@@ -37,11 +45,18 @@
   translate: -50% -50%;
   transform: rotateY(var(--item-angle)) translateZ(var(--orbit-radius));
   backface-visibility: hidden;
-  opacity: .68;
+  opacity: var(--slot-opacity);
   transition: opacity .35s ease;
 }
-.orbit-slot[data-active="true"] { opacity: 1 }
+.orbit-slot[data-active="true"] { --slot-opacity: 1 }
 .orbit-slot[data-active="false"]:not([data-near="true"]) { pointer-events: none }
+@supports (transform: rotateY(mod(10deg, 360deg))) {
+  .orbit-slot {
+    --facing: calc(mod(var(--item-angle) - var(--orbit-turn, 0deg) + 180deg, 360deg) - 180deg);
+    transform: rotateY(var(--item-angle)) translateZ(var(--orbit-radius)) rotateY(calc(-0.32 * var(--facing)));
+    opacity: calc(var(--slot-opacity) * clamp(0, (cos(var(--facing)) - .16) * 8, 1))
+  }
+}
 .orbit-card {
   border: 1px solid #e6edd445;
   border-radius: 10px;
@@ -59,7 +74,6 @@
 .orbit-caption strong { display: block; font-size: clamp(18px,2.5vw,29px); font-weight: 500; line-height: 1.1 }
 .orbit-caption small { display: block; margin-top: 5px; font-size: 12px; color: #dfdfd9 }
 .orbit-caption svg { width: 18px; height: 18px; margin-bottom: 2px }
-.orbit-slot[data-active="false"] .orbit-caption { visibility: hidden }
 .orbit-nav {
   border-top: 1px solid var(--line);
   padding-top: 13px;
@@ -83,7 +97,8 @@
 .orbit-buttons svg { width: 17px; height: 17px }
 
 @media (max-width: 767px) {
-  .noir-orbit { --orbit-card-height: clamp(208px, 49vw, 295px) }
+  .noir-orbit { --orbit-card-height: clamp(195px, 51vw, 295px) }
+  .orbit-track[data-scroll="true"]::after { height: clamp(340px, 65svh, 560px) }
   .orbit-scene { height: calc(var(--orbit-card-height) + 34px) }
   .orbit-caption { padding: 42px 15px 14px }
 }

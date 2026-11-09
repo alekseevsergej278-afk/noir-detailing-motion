@@ -93,7 +93,7 @@
  // Progressive enhancement: content remains visible without JavaScript or IntersectionObserver.
  if ('IntersectionObserver' in window) {
   const observer = new IntersectionObserver(entries => entries.forEach(entry => { if(entry.isIntersecting) { entry.target.classList.remove('is-pending'); observer.unobserve(entry.target); } }), {threshold:.08});
-  document.querySelectorAll('.reveal,.image-reveal').forEach(el => { if(el.getBoundingClientRect().top > innerHeight && !reduceMotion.matches) el.classList.add('is-pending'); observer.observe(el); });
+  document.querySelectorAll('.image-reveal').forEach(el => { if(el.getBoundingClientRect().top > innerHeight && !reduceMotion.matches) el.classList.add('is-pending'); observer.observe(el); });
  }
  const photos = [...document.querySelectorAll('[data-parallax]')]; let scheduled = false;
  function updateScroll() {

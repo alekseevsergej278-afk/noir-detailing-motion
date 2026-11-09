@@ -2,7 +2,7 @@
 
 ## References researched for this update
 
-- Motion: https://motion.dev/docs/react — gallery rotation follows local scroll progress. Motion also animates section heading masks, button hover and press, and the page reading indicator.
+- Motion: https://motion.dev/docs/react — the gallery rotates automatically and follows scroll progress while pinned. Motion also animates section heading masks, button hover and press, and the page reading indicator.
 - Codrops Magnetic Buttons: https://tympanus.net/codrops/2020/08/05/magnetic-buttons/ — restrained pointer attraction and independent label motion. NOIR uses oval targets, a rolling duplicate label and a directional color fill. Touch targets remain stable.
 - Codrops Dynamic CSS Masks: https://tympanus.net/codrops/2021/05/04/dynamic-css-masks-with-custom-properties-and-gsap/ — pointer-controlled spotlight concept. NOIR uses a custom Canvas 2D lamp with damped x/y movement and seeded surface defects.
 - GoogleChromeLabs Two-Up: https://github.com/GoogleChromeLabs/two-up — large comparison handle and deliberate touch target. NOIR uses the Two-Up component for an inline split between simulated defects and clean paint.
@@ -21,4 +21,4 @@ The services section adapts the [shadcn/ui Accordion](https://ui.shadcn.com/docs
 
 ## Motion preference
 
-prefers-reduced-motion disables text travel, gallery scroll rotation, button movement and label rolls; the inspection light tracks the pointer without easing. The controls and all information remain available.
+prefers-reduced-motion disables text travel, button movement and label rolls. The gallery changes frames without spatial interpolation; the inspection light tracks the pointer without easing. The controls and all information remain available.

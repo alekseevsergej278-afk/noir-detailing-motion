@@ -18,7 +18,7 @@ body {
   margin:0;
   color:var(--ink);
   background:var(--bg);
-  font:400 14px/1.7 "Golos Text Variable",Manrope,sans-serif
+  font:400 14px/1.7 "Onest Variable",Manrope,sans-serif
 }
 ::selection {
   background:var(--signal);
@@ -60,10 +60,10 @@ h1,h2,h3,p {
   margin:0
 }
 h1,h2 {
-  font-family:Oswald,sans-serif;
-  font-weight:400;
-  letter-spacing:-.035em;
-  line-height:1.08
+  font-family:"Cormorant Garamond",Georgia,serif;
+  font-weight:600;
+  letter-spacing:-.028em;
+  line-height:1.02
 }
 h2 {
   font-size:clamp(40px,4.5vw,66px)
@@ -188,7 +188,7 @@ h3 {
   padding:155px 5.5% 0
 }
 .hero h1 {
-  font-size:clamp(58px,7.35vw,106px);
+  font-size:clamp(52px,6.4vw,100px);
   line-height:1.04;
   max-width:960px
 }
@@ -1043,7 +1043,7 @@ input[type=range]::-moz-range-thumb {
     object-position:60% center
   }
   .hero h1 {
-    font-size:8.2vw
+    font-size:7.2vw
   }
   .hero-invite {
     bottom:120px
@@ -1132,7 +1132,7 @@ input[type=range]::-moz-range-thumb {
     transition:clip-path .65s var(--ease),visibility .65s
   }
   .mobile-nav>a {
-    font-family:Oswald,sans-serif;
+    font-family:"Cormorant Garamond",Georgia,serif;
     font-size:34px;
     line-height:1.4;
     width:fit-content
@@ -1162,7 +1162,7 @@ input[type=range]::-moz-range-thumb {
     padding:125px 6% 0
   }
   .hero h1 {
-    font-size:clamp(41px,10.8vw,75px);
+    font-size:clamp(32px,9.1vw,66px);
     line-height:1.08
   }
   .hero-offer {
@@ -1482,7 +1482,7 @@ input[type=range]::-moz-range-thumb {
     min-height:720px
   }
   .hero h1 {
-    font-size:36px
+    font-size:30px
   }
   .hero-offer .button {
     top:530px

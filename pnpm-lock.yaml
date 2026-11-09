@@ -8,8 +8,11 @@ importers:
 
   .:
     dependencies:
-      '@fontsource-variable/golos-text':
-        specifier: ^5.2.0
+      '@fontsource-variable/onest':
+        specifier: ^5.3.1
+        version: 5.3.1
+      '@fontsource/cormorant-garamond':
+        specifier: ^5.3.0
         version: 5.3.0
       clsx:
         specifier: ^2.1.1
@@ -207,8 +210,11 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@fontsource-variable/golos-text@5.3.0':
-    resolution: {integrity: sha512-D+Evz5yqXYh6tsalc537FS+cPDWn2FTdO8j/K1ZZuFAvA7ib6WnusTiihciq7mMnm6GBo6XTlh0JXPrhBsam2g==}
+  '@fontsource-variable/onest@5.3.1':
+    resolution: {integrity: sha512-xaaw6G4HDB2/RczsWLD/2bnib4ykmQlTlBUN3GOEOiyErilZukQWVJG95h9zwAy0i8KY+QzDa+COPfqhI72Acw==}
+
+  '@fontsource/cormorant-garamond@5.3.0':
+    resolution: {integrity: sha512-weuGsCirGVWBWqpt6YUp0yLThTe4G8YO45noq8wxeJCRvEpq5lFrxNMFSTxcyOyV5k5otzJ8guDzYegdYlcLMQ==}
 
   '@jridgewell/gen-mapping@0.3.13':
     resolution: {integrity: sha512-2kkt/7niJ6MgEPxF0bYdQ6etZaA+fQvDcLKckhy1yIQOzaoKjBBjSj63/aLVjYE3qhRt5dvM+uUyfCg6UKCBbA==}
@@ -809,7 +815,9 @@ snapshots:
   '@esbuild/win32-x64@0.28.2':
     optional: true
 
-  '@fontsource-variable/golos-text@5.3.0': {}
+  '@fontsource-variable/onest@5.3.1': {}
+
+  '@fontsource/cormorant-garamond@5.3.0': {}
 
   '@jridgewell/gen-mapping@0.3.13':
     dependencies:
