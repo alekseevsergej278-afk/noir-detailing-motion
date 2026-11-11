@@ -14,12 +14,14 @@
   });
  }));
  const list = document.querySelector('#service-list');
- const previewImages = ['paint.png','paint.png','atelier.png','mercedes.jpg','mercedes.jpg','atelier.png','mercedes.jpg','atelier.png'];
+ const previewImages = ['detailing/process.jpg','paint.png','detailing/decision.jpg','detailing/interior.jpg','detailing/interior.jpg','atelier.png','mercedes.jpg','atelier.png'];
  const previewCopy = ['Ясность отражений.\nГлубина цвета.','Сохранить блеск.\nОблегчить уход.','Защитить линии.\nСохранить характер.','Внимание внутри.\nКомфорт каждый день.','Чистота материалов.\nСвежесть ощущений.','Изменить акценты.\nОстаться собой.','Подготовить к встрече.\nСоздать впечатление.','Один автомобиль.\nЦелая программа ухода.'];
  function previewService(index) {
   const photo = document.querySelector('#service-photo');
   const path = 'assets/' + previewImages[index];
-  if (photo.getAttribute('src') !== path) { photo.classList.add('switching'); photo.src = path; photo.onload = () => photo.classList.remove('switching'); }
+  if (photo.getAttribute('src') !== path) { photo.classList.add('switching'); photo.onload = () => photo.classList.remove('switching'); photo.onerror = photo.onload; photo.src = path; }
+  photo.alt = config.services[index][0];
+  photo.classList.toggle('service-interior', index === 3 || index === 4);
   document.querySelector('#service-visual-title').textContent = previewCopy[index];
  }
 
@@ -37,9 +39,9 @@
   const footer = document.createElement('footer');
   const duration = document.createElement('span'); duration.textContent = 'Ориентир по срокам: ' + time;
   const link = document.createElement('a'); link.href = '#contact'; link.textContent = 'Обсудить услугу';
+  link.insertAdjacentHTML('beforeend', '<svg aria-hidden="true"><use href="#arrow"/></svg>');
   footer.append(duration, link); content.append(desc, footer); item.append(summary, content); list.append(item);
-  item.addEventListener('pointerenter', () => previewService(index));
-  summary.addEventListener('focus', () => previewService(index));
+  if (index === 0) item.open = true;
   item.addEventListener('toggle', () => {
    if (!item.open) return;
    previewService(index);
@@ -47,6 +49,7 @@
    if (!('name' in item)) list.querySelectorAll('details[open]').forEach(other => { if (other !== item) other.open = false; });
   });
  });
+ previewService(0);
  list.addEventListener('keydown', event => {
   if (!event.target.matches('summary') || !['ArrowUp', 'ArrowDown', 'Home', 'End'].includes(event.key)) return;
   const summaries = [...list.querySelectorAll('summary')];

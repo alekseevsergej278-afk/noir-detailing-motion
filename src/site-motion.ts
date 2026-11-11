@@ -16,13 +16,12 @@ export function initSiteMotion() {
   ].join(","));
 
   function reveal(element: Element, delay = 0) {
-    if (reduced.matches) return;
     const headline = element.matches("h2");
     const animation = animate(element, {
-      opacity: [0.42, 1],
-      y: [headline ? 15 : 8, 0],
-      ...(headline ? { clipPath: ["inset(0 0 46% 0)", "inset(0 0 0% 0)"] } : {}),
-    }, { duration: headline ? 0.74 : 0.52, delay, ease });
+      opacity: [0.12, 1],
+      y: [reduced.matches ? 0 : headline ? 24 : 12, 0],
+      ...(headline && !reduced.matches ? { clipPath: ["inset(0 0 46% 0)", "inset(0 0 0% 0)"] } : {}),
+    }, { duration: reduced.matches ? 0.65 : headline ? 0.95 : 0.65, delay, ease });
     animation.then(() => {
       if (element instanceof HTMLElement) element.style.clipPath = "";
     });
@@ -61,7 +60,7 @@ export function initSiteMotion() {
     "button,summary,.button,.text-link,.header-contact,.service-content a",
   );
   for (const control of controls) {
-    if (control.closest("#circular-gallery")) continue;
+    if (control.closest("#circular-gallery") || control.matches("summary,.process-step")) continue;
     const action = control.matches("summary") ? control.querySelector<HTMLElement>(".service-title") ?? control : control;
     let hovering = false;
     const move = (y: number, scale: number) => {
@@ -70,12 +69,12 @@ export function initSiteMotion() {
     };
     hover(control, () => {
       hovering = true;
-      move(-2, 1.025);
+      move(-2, 1);
       return () => { hovering = false; move(0, 1); };
     });
     press(control, () => {
       move(hovering ? -1 : 0, 0.97);
-      return () => move(hovering ? -2 : 0, hovering ? 1.025 : 1);
+      return () => move(hovering ? -2 : 0, 1);
     });
   }
 }
