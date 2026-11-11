@@ -5,7 +5,7 @@ import {
 import { Maximize2 } from "lucide-react";
 import {
   animate, motion, useMotionValue, useMotionValueEvent,
-  useReducedMotion, useScroll, useSpring, useTransform,
+  useReducedMotion, useSpring, useTransform,
 } from "motion/react";
 import { cn } from "@/lib/utils";
 
@@ -26,13 +26,10 @@ const wrap = (index: number, count: number) => ((index % count) + count) % count
 
 export const CircularGallery = forwardRef<HTMLDivElement, CircularGalleryProps>(
   function CircularGallery({ items, radius, autoRotateSpeed = 0, className, style, ...props }, ref) {
-    const track = useRef<HTMLDivElement>(null);
-    const pin = useRef<HTMLDivElement>(null);
     const scene = useRef<HTMLDivElement>(null);
     const pointerStart = useRef<{ x: number; y: number } | null>(null);
     const suppressClickUntil = useRef(0);
     const turnTarget = useRef<number | null>(null);
-    const lastProgress = useRef(0);
     const rotation = useMotionValue(0);
     const autoplay = useMotionValue(0);
     const reduced = useReducedMotion();
@@ -40,9 +37,6 @@ export const CircularGallery = forwardRef<HTMLDivElement, CircularGalleryProps>(
     const displayRotation = useTransform(() => autoplay.get() + easedRotation.get());
     const turnAngle = useTransform(displayRotation, (value) => `${value}deg`);
     const rotateY = useTransform(displayRotation, (value) => `rotateY(${-value}deg)`);
-    const { scrollYProgress } = useScroll({
-      target: track, offset: ["start 0.08", "end 0.08"],
-    });
     const [activeIndex, setActiveIndex] = useState(0);
     const step = 360 / Math.max(1, items.length);
     const active = wrap(activeIndex, Math.max(1, items.length));
@@ -51,19 +45,20 @@ export const CircularGallery = forwardRef<HTMLDivElement, CircularGalleryProps>(
       setActiveIndex(wrap(Math.round(value / step), Math.max(1, items.length)));
     });
 
-    useMotionValueEvent(scrollYProgress, "change", (progress) => {
-      if (!track.current || !pin.current || items.length < 2) return;
-      const height = track.current.offsetHeight;
-      const distance = height - pin.current.offsetHeight;
-      if (distance <= 0) return;
-      const pinnedProgress = Math.min(1, progress * height / distance);
-      const delta = pinnedProgress - lastProgress.current;
-      lastProgress.current = pinnedProgress;
-      if (!delta) return;
-      turnTarget.current = null;
-      rotation.stop();
-      rotation.set(rotation.get() + delta * 360);
-    });
+    useEffect(() => {
+      const element = scene.current;
+      if (!element || items.length < 2) return;
+      const wheel = (event: WheelEvent) => {
+        if (Math.abs(event.deltaX) <= Math.abs(event.deltaY)) return;
+        event.preventDefault();
+        rotation.stop();
+        turnTarget.current = null;
+        const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? element.clientWidth : 1;
+        rotation.set(rotation.get() + event.deltaX * unit * 0.12);
+      };
+      element.addEventListener("wheel", wheel, { passive: false });
+      return () => element.removeEventListener("wheel", wheel);
+    }, [items.length, rotation]);
 
     useEffect(() => () => rotation.stop(), [rotation]);
 
@@ -116,8 +111,8 @@ export const CircularGallery = forwardRef<HTMLDivElement, CircularGalleryProps>(
         className={cn("noir-orbit relative w-full", className)}
         style={{ ...style, ...(radius === undefined ? {} : { "--orbit-radius": `${radius}px` }) } as CSSProperties}
       >
-        <div ref={track} className="orbit-track" data-scroll={items.length > 1}>
-          <div ref={pin} className="orbit-pin">
+        <div className="orbit-track">
+          <div className="orbit-pin">
             <div
               ref={scene}
               className="orbit-scene relative w-full"

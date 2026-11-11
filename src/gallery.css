@@ -21,12 +21,6 @@
   --orbit-card-width: min(56cqw, 460px);
   --orbit-card-height: clamp(224px, 31vw, 360px);
 }
-.orbit-track[data-scroll="true"]::after {
-  content: "";
-  display: block;
-  height: clamp(430px, 90svh, 900px)
-}
-.orbit-track[data-scroll="true"] .orbit-pin { position: sticky; top: 8svh }
 .orbit-scene {
   height: calc(var(--orbit-card-height) + 120px);
   perspective: 2200px;
@@ -74,7 +68,6 @@
 .orbit-caption svg { width: 18px; height: 18px; margin-bottom: 2px }
 @media (max-width: 767px) {
   .noir-orbit { --orbit-card-height: clamp(195px, 51vw, 295px) }
-  .orbit-track[data-scroll="true"]::after { height: clamp(340px, 65svh, 560px) }
   .orbit-scene { height: calc(var(--orbit-card-height) + 34px) }
   .orbit-caption { padding: 42px 15px 14px }
 }
