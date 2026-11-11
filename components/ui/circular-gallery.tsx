@@ -4,7 +4,7 @@ import {
 } from "react";
 import { Maximize2 } from "lucide-react";
 import {
-  animate, motion, useMotionValue, useMotionValueEvent,
+  animate, motion, useAnimationFrame, useMotionValue, useMotionValueEvent,
   useReducedMotion, useSpring, useTransform,
 } from "motion/react";
 import { cn } from "@/lib/utils";
@@ -38,11 +38,16 @@ export const CircularGallery = forwardRef<HTMLDivElement, CircularGalleryProps>(
     const turnAngle = useTransform(displayRotation, (value) => `${value}deg`);
     const rotateY = useTransform(displayRotation, (value) => `rotateY(${-value}deg)`);
     const [activeIndex, setActiveIndex] = useState(0);
+    const activeIndexRef = useRef(0);
     const step = 360 / Math.max(1, items.length);
     const active = wrap(activeIndex, Math.max(1, items.length));
 
     useMotionValueEvent(displayRotation, "change", (value) => {
-      setActiveIndex(wrap(Math.round(value / step), Math.max(1, items.length)));
+      const next = wrap(Math.round(value / step), Math.max(1, items.length));
+      if (next !== activeIndexRef.current) {
+        activeIndexRef.current = next;
+        setActiveIndex(next);
+      }
     });
 
     useEffect(() => {
@@ -62,21 +67,11 @@ export const CircularGallery = forwardRef<HTMLDivElement, CircularGalleryProps>(
 
     useEffect(() => () => rotation.stop(), [rotation]);
 
-    useEffect(() => {
-      if (!autoRotateSpeed || items.length < 2) return;
-      let frame = 0;
-      let previous: number | null = null;
-      const tick = (time: number) => {
-        // Independent clock: scrolling and focus never interrupt autoplay.
-        if (previous !== null && !document.hidden) {
-          autoplay.set(autoplay.get() + autoRotateSpeed * Math.min(64, time - previous) / (1000 / 60));
-        }
-        previous = time;
-        frame = requestAnimationFrame(tick);
-      };
-      frame = requestAnimationFrame(tick);
-      return () => cancelAnimationFrame(frame);
-    }, [autoRotateSpeed, autoplay, items.length]);
+    // Share Motion's render clock; avoid a second RAF and large catch-up jumps.
+    useAnimationFrame((_time, delta) => {
+      if (!autoRotateSpeed || items.length < 2 || document.hidden) return;
+      autoplay.set(autoplay.get() + autoRotateSpeed * Math.min(32, delta) / (1000 / 60));
+    });
 
     function turn(offset: number) {
       const next = (Math.round((turnTarget.current ?? rotation.get()) / step) + offset) * step;

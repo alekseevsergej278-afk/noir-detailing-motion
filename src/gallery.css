@@ -29,7 +29,7 @@
   user-select: none;
 }
 .orbit-scene:focus-visible { outline: 1px solid var(--signal); outline-offset: 4px }
-.orbit-ring { transform-style: preserve-3d }
+.orbit-ring { transform-style: preserve-3d; will-change: transform }
 .orbit-slot {
   left: 50%;
   top: 50%;
