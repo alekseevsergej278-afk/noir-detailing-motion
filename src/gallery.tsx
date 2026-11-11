@@ -29,7 +29,7 @@ function NoirGallery() {
   useEffect(() => {
     document.querySelector<HTMLElement>("[data-gallery-fallback]")?.setAttribute("hidden", "");
   }, []);
-  return <CircularGallery items={items} autoRotateSpeed={0.28} />;
+  return <CircularGallery items={items} autoRotateSpeed={0.10} />;
 }
 
 const mount = document.querySelector("#circular-gallery");

@@ -4,7 +4,7 @@ import {
 } from "react";
 import { Maximize2 } from "lucide-react";
 import {
-  animate, motion, useInView, useMotionValue, useMotionValueEvent,
+  animate, motion, useMotionValue, useMotionValueEvent,
   useReducedMotion, useScroll, useSpring, useTransform,
 } from "motion/react";
 import { cn } from "@/lib/utils";
@@ -31,22 +31,19 @@ export const CircularGallery = forwardRef<HTMLDivElement, CircularGalleryProps>(
     const scene = useRef<HTMLDivElement>(null);
     const pointerStart = useRef<{ x: number; y: number } | null>(null);
     const suppressClickUntil = useRef(0);
-    const resumeAt = useRef(0);
     const turnTarget = useRef<number | null>(null);
     const lastProgress = useRef(0);
-    const scrollAngle = useRef<number | null>(null);
     const rotation = useMotionValue(0);
+    const autoplay = useMotionValue(0);
     const reduced = useReducedMotion();
     const easedRotation = useSpring(rotation, { stiffness: 180, damping: 24, mass: 0.45 });
-    const displayRotation = reduced ? rotation : easedRotation;
+    const displayRotation = useTransform(() => autoplay.get() + easedRotation.get());
     const turnAngle = useTransform(displayRotation, (value) => `${value}deg`);
     const rotateY = useTransform(displayRotation, (value) => `rotateY(${-value}deg)`);
-    const visible = useInView(scene, { amount: 0.2 });
     const { scrollYProgress } = useScroll({
       target: track, offset: ["start 0.08", "end 0.08"],
     });
     const [activeIndex, setActiveIndex] = useState(0);
-    const [focused, setFocused] = useState(false);
     const step = 360 / Math.max(1, items.length);
     const active = wrap(activeIndex, Math.max(1, items.length));
 
@@ -62,47 +59,31 @@ export const CircularGallery = forwardRef<HTMLDivElement, CircularGalleryProps>(
       const pinnedProgress = Math.min(1, progress * height / distance);
       const delta = pinnedProgress - lastProgress.current;
       lastProgress.current = pinnedProgress;
-      if (!delta || focused) return;
-      resumeAt.current = performance.now() + 180;
+      if (!delta) return;
       turnTarget.current = null;
       rotation.stop();
-      const next = (scrollAngle.current ?? rotation.get()) + delta * 360;
-      scrollAngle.current = next;
-      if (reduced) rotation.jump(Math.round(next / step) * step);
-      else rotation.set(next);
+      rotation.set(rotation.get() + delta * 360);
     });
 
     useEffect(() => () => rotation.stop(), [rotation]);
 
     useEffect(() => {
-      if (!visible || focused || !autoRotateSpeed || items.length < 2) return;
-      const canAdvance = (time: number) => !document.hidden && !pointerStart.current &&
-        !document.activeElement?.closest("dialog[open]") && time > resumeAt.current;
-      if (reduced) {
-        const timer = setInterval(() => {
-          if (!canAdvance(performance.now())) return;
-          scrollAngle.current = null;
-          rotation.jump((Math.round(rotation.get() / step) + 1) * step);
-        }, step / autoRotateSpeed * (1000 / 60));
-        return () => clearInterval(timer);
-      }
+      if (!autoRotateSpeed || items.length < 2) return;
       let frame = 0;
-      let previous = 0;
+      let previous: number | null = null;
       const tick = (time: number) => {
-        if (previous && canAdvance(time)) {
-          scrollAngle.current = null;
-          rotation.set(rotation.get() + autoRotateSpeed * Math.min(32, time - previous) / (1000 / 60));
+        // Independent clock: scrolling and focus never interrupt autoplay.
+        if (previous !== null && !document.hidden) {
+          autoplay.set(autoplay.get() + autoRotateSpeed * Math.min(64, time - previous) / (1000 / 60));
         }
         previous = time;
         frame = requestAnimationFrame(tick);
       };
       frame = requestAnimationFrame(tick);
       return () => cancelAnimationFrame(frame);
-    }, [autoRotateSpeed, focused, items.length, reduced, rotation, step, visible]);
+    }, [autoRotateSpeed, autoplay, items.length]);
 
     function turn(offset: number) {
-      resumeAt.current = performance.now() + 720;
-      scrollAngle.current = null;
       const next = (Math.round((turnTarget.current ?? rotation.get()) / step) + offset) * step;
       rotation.stop();
       if (reduced) rotation.jump(next);
@@ -143,10 +124,6 @@ export const CircularGallery = forwardRef<HTMLDivElement, CircularGalleryProps>(
               tabIndex={items.length > 1 ? 0 : undefined}
               aria-label="Кадры галереи. Используйте стрелки влево и вправо."
               onKeyDown={handleKeys}
-              onFocus={(event) => setFocused(event.target.matches(":focus-visible"))}
-              onBlur={(event) => {
-                if (!event.currentTarget.contains(event.relatedTarget)) setFocused(false);
-              }}
               onPointerLeave={() => { pointerStart.current = null; }}
               onPointerDown={(event) => {
                 if (event.button === 0 && event.isPrimary) {
